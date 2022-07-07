@@ -19,6 +19,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_AddNote_clicked();
+
+    void on_DeleteNote_clicked();
+
+    void on_AddSeller_clicked();
+
+    void on_DeleteSeller_clicked();
+
+    void on_ReportButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     HashTable<Person>* ht;

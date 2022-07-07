@@ -28,6 +28,15 @@ set(PROJECT_SOURCES
         Person.cpp
         Note.h
         Note.cpp
+        report.h
+        report.cpp
+        report.ui
+        addseller.h
+        addseller.cpp
+        addseller.ui
+        addnote.h
+        addnote.cpp
+        addnote.ui
         resources.qrc
 )
 
