@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "HashTable.h"
+#include "Tree.h"
+#include "Person.h"
+#include "Note.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +21,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    HashTable<Person>* ht;
+    Tree<Note>* rb;
 };
 #endif // MAINWINDOW_H

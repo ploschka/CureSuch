@@ -82,7 +82,7 @@ private:
     }
 
 public:
-    HashTable(size_t size): tableSize(size), filled(0)
+    HashTable(size_t size, size_t (*valueToStr)(T)): tableSize(size), filled(0), valueToStr(valueToStr)
     {
         rounded = [](size_t v)
         {
@@ -98,6 +98,7 @@ public:
         }(size);
         table = new T[size];
         status = new bool[size];
+        memset(status, 0, size);
     }
     ~HashTable()
     {

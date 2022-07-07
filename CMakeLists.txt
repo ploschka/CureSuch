@@ -24,6 +24,11 @@ set(PROJECT_SOURCES
         List.h
         Element.h
         HashTable.h
+        Person.h
+        Person.cpp
+        Note.h
+        Note.cpp
+        resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

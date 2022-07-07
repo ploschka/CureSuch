@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>icons/notebook_icon-icons.com_49834.ico</file>
+    </qresource>
+</RCC>
