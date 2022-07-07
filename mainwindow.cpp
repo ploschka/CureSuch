@@ -3,6 +3,7 @@
 #include "report.h"
 #include "addseller.h"
 #include "addnote.h"
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -89,5 +90,35 @@ void MainWindow::on_ReportButton_clicked()
     Report rep(this);
     rep.setModal(true);
     rep.exec();
+}
+
+
+void MainWindow::on_NoteImport_clicked()
+{
+
+}
+
+
+void MainWindow::on_NoteExport_clicked()
+{
+
+}
+
+
+void MainWindow::on_SellerImport_clicked()
+{
+
+}
+
+
+void MainWindow::on_SellerExport_clicked()
+{
+
+}
+
+
+void MainWindow::on_DebugButton_clicked()
+{
+
 }
 

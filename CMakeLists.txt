@@ -37,6 +37,9 @@ set(PROJECT_SOURCES
         addnote.h
         addnote.cpp
         addnote.ui
+        debugwindow.h
+        debugwindow.cpp
+        debugwindow.ui
         resources.qrc
 )
 

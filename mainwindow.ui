@@ -31,7 +31,7 @@
       </property>
      </spacer>
     </item>
-    <item row="3" column="1">
+    <item row="4" column="1">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -43,6 +43,22 @@
        <size>
         <width>20</width>
         <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Preferred</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
        </size>
       </property>
      </spacer>
@@ -68,6 +84,20 @@
             <widget class="QPushButton" name="DeleteNote">
              <property name="text">
               <string>Удалить</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="NoteImport">
+             <property name="text">
+              <string>Импорт</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="NoteExport">
+             <property name="text">
+              <string>Экспорт</string>
              </property>
             </widget>
            </item>
@@ -133,6 +163,20 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="SellerImport">
+             <property name="text">
+              <string>Импорт</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="SellerExport">
+             <property name="text">
+              <string>Экспорт</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -142,22 +186,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="1" column="0">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Preferred</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item row="1" column="2">
      <spacer name="horizontalSpacer_4">
@@ -175,12 +203,23 @@
       </property>
      </spacer>
     </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="ReportButton">
-      <property name="text">
-       <string>Составить отчёт</string>
-      </property>
-     </widget>
+    <item row="3" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="DebugButton">
+        <property name="text">
+         <string>Отладка</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="ReportButton">
+        <property name="text">
+         <string>Составить отчёт</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

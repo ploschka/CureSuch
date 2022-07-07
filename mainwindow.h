@@ -30,6 +30,16 @@ private slots:
 
     void on_ReportButton_clicked();
 
+    void on_NoteImport_clicked();
+
+    void on_NoteExport_clicked();
+
+    void on_SellerImport_clicked();
+
+    void on_SellerExport_clicked();
+
+    void on_DebugButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     HashTable<Person>* ht;
