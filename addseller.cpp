@@ -12,3 +12,22 @@ AddSeller::~AddSeller()
 {
     delete ui;
 }
+
+Person* AddSeller::getNewSeller()
+{
+    return newSeller;
+}
+
+void AddSeller::on_AddButton_clicked()
+{
+    newSeller = new Person(ui->NameLine->text().toStdString(), ui->NumberLine->text().toStdString(),
+                           ui->PriceLine->text().toULong(), ui->BuildingLine->text().toStdString());
+    this->accept();
+}
+
+
+void AddSeller::on_CancelButton_clicked()
+{
+    this->reject();
+}
+

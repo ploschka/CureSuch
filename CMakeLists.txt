@@ -16,57 +16,39 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        Tree.h
-        Node.h
-        List.h
-        Element.h
-        HashTable.h
-        Person.h
-        Person.cpp
-        Note.h
-        Note.cpp
-        report.h
-        report.cpp
-        report.ui
-        addseller.h
-        addseller.cpp
-        addseller.ui
-        addnote.h
-        addnote.cpp
-        addnote.ui
-        debugwindow.h
-        debugwindow.cpp
-        debugwindow.ui
         resources.qrc
 )
+
+add_library(mainwindow STATIC mainwindow.cpp mainwindow.h mainwindow.ui)
+add_library(report STATIC report.h report.cpp report.ui)
+add_library(addseller STATIC addseller.cpp addseller.h addseller.ui)
+add_library(addnote STATIC addnote.cpp addnote.h addnote.ui)
+add_library(debugwindow STATIC debugwindow.cpp debugwindow.h debugwindow.ui)
+add_library(search search.h search.cpp search.ui)
+add_library(person Person.cpp Person.h)
+add_library(note Note.cpp Note.h)
+add_library(datastructures Tree.h Node.h List.h Element.h HashTable.h)
+
+target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(report PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(addseller PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(addnote PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(search PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CureSuch
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET CureSuch APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(CureSuch SHARED
+    add_executable(CureSuch
             ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(CureSuch
-            ${PROJECT_SOURCES}
-        )
-    endif()
+            )
 endif()
 
-target_link_libraries(CureSuch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(CureSuch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets mainwindow report addseller addnote debugwindow search person note datastructures)
 
 set_target_properties(CureSuch PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

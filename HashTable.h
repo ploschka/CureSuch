@@ -11,7 +11,7 @@ private:
     size_t tableSize;
     size_t filled;
     size_t rounded;
-    size_t (*valueToStr)(T);
+    size_t (*valueToNumber)(const T&);
 
     size_t getHash(const T& key) const
     {
@@ -53,7 +53,7 @@ private:
     }
     size_t primaryHash(const T& key) const
     {
-        size_t result = valueToStr(key);
+        size_t result = valueToNumber(key);
         return result % rounded;
     }
 
@@ -82,7 +82,7 @@ private:
     }
 
 public:
-    HashTable(size_t size, size_t (*valueToStr)(T)): tableSize(size), filled(0), valueToStr(valueToStr)
+    HashTable(size_t size, size_t (*valueToNumber)(const T&)): tableSize(size), filled(0), valueToNumber(valueToNumber)
     {
         rounded = [](size_t v)
         {

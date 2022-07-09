@@ -1,4 +1,4 @@
-#pragma once
+    #pragma once
 #include <string>
 
 class Note
@@ -13,9 +13,12 @@ public:
 
     bool operator<(const Note& other) const;
     bool operator>(const Note& other) const;
+    bool operator>=(const Note& other) const;
     bool operator==(const Note& other) const;
 
     std::string getDiscipline() const;
     std::string getTheme() const;
     std::string getNumber() const;
 };
+
+std::string note_to_string(const Note& n);

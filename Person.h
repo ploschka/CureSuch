@@ -15,14 +15,14 @@ public:
     Person() = default;
     ~Person() = default;
 
-    bool operator==(Person other) const;
+    bool operator==(const Person& other) const;
+    bool operator!=(const Person& other) const;
 
     std::string getName() const;
     std::string getNumber() const;
     size_t getPrice() const;
     std::string getAddress() const;
-
-    friend size_t to_number(Person);
 };
 
-size_t to_number(Person p);
+size_t per_to_number(const Person& p);
+std::string per_to_string(const Person& p);

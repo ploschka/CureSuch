@@ -4,34 +4,40 @@
 #include "addseller.h"
 #include "addnote.h"
 #include <QFileDialog>
+#include <QTreeWidgetItem>
+#include <QStringList>
+#include <QFileDialog>
+#include <fstream>
+#include "search.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ht = new HashTable<Person>(50, to_number);
+    ht = new HashTable<Person>(50, per_to_number);
     rb = new Tree<Note>;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete ht;
+    delete rb;
 }
 
 void MainWindow::on_AddNote_clicked()
 {
-    /*
-     * Открывать окошко с полями для добавления
-     * Введённые данные проверять сразу, перед созданием объекта
-     * Если данные не соответствуют спецификации, то открывать окошко с ошибкой
-     * Если данные соответствуют, то создавать объект и добавлять в дерево
-     * После этого добавить объект в список сразу на своё место
-     * Список сортировать по алфавиту
-     */
     AddNote add(this);
     add.setModal(true);
-    add.exec();
+    if(add.exec() == QDialog::Accepted)
+    {
+        Note* note = add.getNewNote();
+        rb->insert(*note);
+        QStringList list;
+        list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme()) << QString::fromStdString(note->getNumber());
+        ui->NotesList->addTopLevelItem(new QTreeWidgetItem(list));
+    }
 }
 
 
@@ -45,24 +51,25 @@ void MainWindow::on_DeleteNote_clicked()
      * Найти его в дереве и удалить
      * Вот и всё
      */
+    delete (ui->NotesList->currentItem());
+    ui->NotesList->setCurrentItem(nullptr);
+    ui->DeleteNote->setEnabled(false);
 }
 
 
 void MainWindow::on_AddSeller_clicked()
 {
-    /*
-     * Открывать окошко с полями для добавления
-     * Введённые данные проверять сразу, перед созданием объекта
-     * Если данные не соответствуют спецификации, то открывать окошко с ошибкой
-     * Если данные соответствуют, то создавать объект и проверять его наличие в хэш таблице
-     * Если объект уже существует, открывать окошко с ошибкой
-     * Если такого объекта нет, то добавлять в хэш таблицу
-     * После этого добавить объект в список сразу на своё место
-     * Список сортирован по алфавиту
-     */
     AddSeller add(this);
     add.setModal(true);
-    add.exec();
+    if(add.exec() == QDialog::Accepted)
+    {
+        Person* seller = add.getNewSeller();
+        ht->write(*seller);
+        QStringList list;
+        list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
+             << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
+        ui->SellerList->addTopLevelItem(new QTreeWidgetItem(list));
+    }
 }
 
 
@@ -95,30 +102,51 @@ void MainWindow::on_ReportButton_clicked()
 
 void MainWindow::on_NoteImport_clicked()
 {
-
+    std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с конспектами", "", "*.txt").toStdString();
 }
 
 
 void MainWindow::on_NoteExport_clicked()
 {
-
+    std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с конспектами", "", "*.txt").toStdString();
 }
 
 
 void MainWindow::on_SellerImport_clicked()
 {
-
+    std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с продавцами", "", "*.txt").toStdString();
 }
 
 
 void MainWindow::on_SellerExport_clicked()
 {
-
+    std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с продавцами", "", "*.txt").toStdString();
 }
 
 
 void MainWindow::on_DebugButton_clicked()
 {
 
+}
+
+void MainWindow::on_NoteSearchButton_clicked()
+{
+    Search search(this, "Поиск конспектов");
+    search.ggg(ui->NotesList);
+    search.setModal(true);
+    search.exec();
+}
+
+void MainWindow::on_SellerSearchButton_clicked()
+{
+    Search search(this, "Поиск продавцов");
+    search.ggg(ui->SellerList);
+    search.setModal(true);
+    search.exec();
+}
+
+void MainWindow::on_NotesList_itemClicked(QTreeWidgetItem *item, int column)
+{
+    ui->DeleteNote->setEnabled(true);
 }
 

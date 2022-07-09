@@ -6,6 +6,8 @@
 #include "Tree.h"
 #include "Person.h"
 #include "Note.h"
+#include <QListWidget>
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,6 +41,12 @@ private slots:
     void on_SellerExport_clicked();
 
     void on_DebugButton_clicked();
+
+    void on_NoteSearchButton_clicked();
+
+    void on_SellerSearchButton_clicked();
+
+    void on_NotesList_itemClicked(QTreeWidgetItem *item, int column);
 
 private:
     Ui::MainWindow *ui;

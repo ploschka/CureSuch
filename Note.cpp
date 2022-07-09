@@ -23,6 +23,10 @@ bool Note::operator>(const Note& other) const
 {
     return other < *this;
 }
+bool Note::operator>=(const Note& other) const
+{
+    return !(*this < other);
+}
 bool Note::operator==(const Note& other) const
 {
     return (this->discipline == other.discipline && this->theme == other.theme && this->number == other.number);
@@ -39,4 +43,9 @@ std::string Note::getTheme() const
 std::string Note::getNumber() const
 {
     return number;
+}
+
+std::string note_to_string(const Note& n)
+{
+    return (n.getDiscipline() + ' ' + n.getTheme() + ' ' + n.getNumber());
 }

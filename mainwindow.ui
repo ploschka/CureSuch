@@ -82,6 +82,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="DeleteNote">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Удалить</string>
              </property>
@@ -89,8 +92,14 @@
            </item>
            <item>
             <widget class="QPushButton" name="NoteImport">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>Импорт</string>
+             </property>
+             <property name="checkable">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -98,6 +107,13 @@
             <widget class="QPushButton" name="NoteExport">
              <property name="text">
               <string>Экспорт</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="NoteSearchButton">
+             <property name="text">
+              <string>Поиск</string>
              </property>
             </widget>
            </item>
@@ -120,7 +136,41 @@
           </layout>
          </item>
          <item>
-          <widget class="QListView" name="NotesList"/>
+          <widget class="QTreeWidget" name="NotesList">
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="allColumnsShowFocus">
+            <bool>true</bool>
+           </property>
+           <property name="headerHidden">
+            <bool>false</bool>
+           </property>
+           <attribute name="headerHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Дисциплина</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Тема</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Номер телефона</string>
+            </property>
+           </column>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -158,6 +208,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="DeleteSeller">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Удалить</string>
              </property>
@@ -177,10 +230,53 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="SellerSearchButton">
+             <property name="text">
+              <string>Поиск</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
-          <widget class="QListView" name="SellersList"/>
+          <widget class="QTreeWidget" name="SellerList">
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="allColumnsShowFocus">
+            <bool>true</bool>
+           </property>
+           <property name="columnCount">
+            <number>4</number>
+           </property>
+           <attribute name="headerVisible">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>ФИО</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Номер телефона</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Стоимость</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Место жительства</string>
+            </property>
+           </column>
+          </widget>
          </item>
         </layout>
        </widget>

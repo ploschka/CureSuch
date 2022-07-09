@@ -3,9 +3,14 @@
 Person::Person(std::string name, std::string number, size_t price, std::string address):
     name(name), number(number), price(price), address(address){}
 
-bool Person::operator==(Person other) const
+bool Person::operator==(const Person& other) const
 {
-    return (this->name == other.name && this->number == other.number && this->price == other.price && this->address == other.address);
+    return this->number == other.number;
+}
+
+bool Person::operator!=(const Person& other) const
+{
+    return !(*this == other);
 }
 
 std::string Person::getName() const
@@ -25,16 +30,21 @@ std::string Person::getAddress() const
     return address;
 }
 
-size_t to_number(Person p)
+size_t per_to_number(const Person& p)
 {
     size_t result = 0;
-    std::string combined = p.name + p.number + p.address;
+    std::string combined = p.getNumber();
     size_t j = 1;
     for(auto i: combined)
     {
         result += i * j;
         j++;
     }
-    result += p.price * j;
+    result += p.getPrice() * j;
     return result;
+}
+
+std::string per_to_string(const Person& p)
+{
+    return (p.getName() + ' ' + p.getNumber() + ' ' + std::to_string(p.getPrice()) + ' ' + p.getAddress());
 }
