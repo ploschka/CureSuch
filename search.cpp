@@ -7,6 +7,7 @@ Search::Search(QWidget *parent, QString title) :
 {
     ui->setupUi(this);
     this->setWindowTitle(title);
+    ui->tree->header()->setSectionsMovable(false);
 }
 
 Search::~Search()

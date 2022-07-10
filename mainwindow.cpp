@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->NotesList->header()->setSectionsMovable(false);
+    ui->SellerList->header()->setSectionsMovable(false);
+
     name = new Tree<std::string, Person*>;
     hnum = new HashTable<std::string, Person*>(1000, num_to_num);
     price = new Tree<size_t, Person*>;
@@ -78,65 +81,56 @@ void MainWindow::purge(QTreeWidgetItem* item, Person* victim)
     this->address->remove(victim->getAddress(), victim);
 }
 
-void MainWindow::add(Note* note)
+bool MainWindow::add(Note* note)
 {
-    bool catched = false;
     try
     {
         hnum->find(note->getNumber());
     }
     catch(std::runtime_error error)
     {
-        catched = true;
         QString str("Невозможно создать конспект для несуществующего продавца");
         QMessageBox::critical(this, "Ошибка создания конспекта", str);
-    }
-
-    if(catched)
-    {
         delete note;
+        return false;
     }
-    else
-    {
-        dis->insert(note->getDiscipline(), note);
-        theme->insert(note->getTheme(), note);
-        tnum->insert(note->getNumber(), note);
+    dis->insert(note->getDiscipline(), note);
+    theme->insert(note->getTheme(), note);
+    tnum->insert(note->getNumber(), note);
 
-        QStringList list;
-        list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme())
-             << QString::fromStdString(note->getNumber());
-        auto item = new QTreeWidgetItem(list);
-        notes[item] = note;
-        ui->NotesList->addTopLevelItem(item);
-    }
+    QStringList list;
+    list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme())
+         << QString::fromStdString(note->getNumber());
+    auto item = new QTreeWidgetItem(list);
+    notes[item] = note;
+    ui->NotesList->addTopLevelItem(item);
+    return true;
 }
 
-void MainWindow::add(Person* seller)
+bool MainWindow::add(Person* seller)
 {
-    bool catched = false;
     try
     {
         hnum->write(seller->getNumber(), seller);
     }
     catch(std::runtime_error error)
     {
-        catched = true;
         QString str("Продавец с таким номером телефона уже в таблице");
         QMessageBox::critical(this, "Ошибка создания продавца", str);
+        delete seller;
+        return false;
     }
-    if(!catched)
-    {
-        name->insert(seller->getName(), seller);
-        price->insert(seller->getPrice(), seller);
-        address->insert(seller->getAddress(), seller);
+    name->insert(seller->getName(), seller);
+    price->insert(seller->getPrice(), seller);
+    address->insert(seller->getAddress(), seller);
 
-        QStringList list;
-        list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
-             << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
-        auto item = new QTreeWidgetItem(list);
-        persons[item] = seller;
-        ui->SellerList->addTopLevelItem(item);
-    }
+    QStringList list;
+    list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
+         << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
+    auto item = new QTreeWidgetItem(list);
+    persons[item] = seller;
+    ui->SellerList->addTopLevelItem(item);
+    return true;
 }
 
 void MainWindow::delSellerBtn(QTreeWidgetItem* curr)
@@ -259,22 +253,61 @@ void MainWindow::on_NoteImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с конспектами", "", "*.txt").toStdString();
     parsed_strings strs = parser->parse(path);
+    for(auto& i: strs)
+    {
+        std::string dis = i[0];
+        std::string theme = i[1];
+        std::string number = i[2];
+        if (!add(new Note(dis, theme, number)))
+        {
+            break;
+        }
+    }
 }
 
 void MainWindow::on_NoteExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с конспектами", "", "*.txt").toStdString();
+    auto list = ui->NotesList->findItems("", Qt::MatchStartsWith, 0);
+    std::ofstream file(path);
+    for(auto& i: list)
+    {
+        file << i->text(0).toStdString() << "; " << i->text(1).toStdString()<< "; "
+             << i->text(2).toStdString() << '\n';
+    }
+    file.flush();
+    file.close();
 }
 
 void MainWindow::on_SellerImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с продавцами", "", "*.txt").toStdString();
     parsed_strings strs = parser->parse(path);
+    for(auto& i: strs)
+    {
+        std::string name = i[0];
+        std::string number = i[1];
+        size_t price = std::stoul(i[2]);
+        std::string address = i[3];
+        if(!add(new Person(name, number, price, address)))
+        {
+            break;
+        }
+    }
 }
 
 void MainWindow::on_SellerExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с продавцами", "", "*.txt").toStdString();
+    auto list = ui->SellerList->findItems("", Qt::MatchStartsWith, 0);
+    std::ofstream file(path);
+    for(auto& i: list)
+    {
+        file << i->text(0).toStdString() << "; " << i->text(1).toStdString() << "; "
+             << i->text(2).toStdString() << "; " << i->text(3).toStdString() << '\n';
+    }
+    file.flush();
+    file.close();
 }
 
 void MainWindow::on_DebugButton_clicked()

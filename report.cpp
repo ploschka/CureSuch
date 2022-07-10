@@ -6,6 +6,7 @@ Report::Report(QWidget *parent) :
     ui(new Ui::Report)
 {
     ui->setupUi(this);
+    ui->treeWidget->header()->setSectionsMovable(false);
 }
 
 Report::~Report()

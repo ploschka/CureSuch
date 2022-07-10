@@ -76,7 +76,7 @@ private:
 
     void purge(QTreeWidgetItem* item, Note* victim);
     void purge(QTreeWidgetItem* item, Person* victim);
-    void add(Note* newNote);
-    void add(Person* newPerson);
+    bool add(Note* newNote);
+    bool add(Person* newPerson);
 };
 #endif // MAINWINDOW_H
