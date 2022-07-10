@@ -2,13 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#define TYPE2POINTER
 #include "HashTable.h"
 #include "Tree.h"
 #include "Person.h"
 #include "Note.h"
-#include <QListWidget>
 #include <QTreeWidgetItem>
 #include <utility>
+#include <map>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,6 +31,9 @@ public:
     Tree<std::string, Note*>* dis;
     Tree<std::string, Note*>* theme;
     Tree<std::string, Note*>* tnum;
+
+    void purge(QTreeWidgetItem* item, Note* victim);
+    void purge(QTreeWidgetItem* item, Person* victim);
 
 private slots:
     void on_AddNote_clicked();
@@ -58,7 +62,11 @@ private slots:
 
     void on_NotesList_itemClicked(QTreeWidgetItem *item, int column);
 
+    void on_SellerList_itemClicked(QTreeWidgetItem *item, int column);
+
 private:
     Ui::MainWindow *ui;
+    std::map<QTreeWidgetItem*, Person*> persons;
+    std::map<QTreeWidgetItem*, Note*> notes;
 };
 #endif // MAINWINDOW_H

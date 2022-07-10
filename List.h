@@ -59,10 +59,15 @@ public:
         {
             Element<T>* tmp = head;
             int len = length();
-            for(int i = 1; i <= len; i++)
+            while(tmp)
             {
-                os << tmp->getValue() << " --> ";
+#ifdef TYPE2POINTER
+                    os << *(tmp->getValue());
+#else
+                    os << tmp->getValue();
+#endif
                 tmp = tmp->next;
+                os << " --> ";
             }
             os << std::endl;
         }
@@ -118,16 +123,61 @@ public:
             std::cout << "������ ����\n";
         }
     }
-    T& operator[](int index)
+    void remove(const T& value)
     {
-        if ((index < length()) && (index > 0))
+        Element<T>* curr = head;
+        while(curr->getValue() != value)
+        {
+            curr = curr->next;
+        }
+        if(curr->next)
+        {
+            curr->next->prev = curr->prev;
+        }
+        if(curr->prev)
+        {
+            curr->prev->next = curr->next;
+        }
+        if(head == curr)
+        {
+            head = curr->next;
+        }
+        if(tail == curr)
+        {
+            tail = curr->prev;
+        }
+        delete curr;
+    }
+    Element<T>* operator[](size_t index)
+    {
+        if (index >= 0)
         {
             Element<T>* tmp = head;
+            size_t count = 0;
             for (int i = 0; i < index; i++)
+            while(tmp && count < index)
             {
                 tmp = tmp->next;
             }
-            return tmp->getValue();
+            return tmp;
+        }
+        else
+        {
+            exit(-1);
+        }
+    }
+    Element<T>* index(size_t ind)
+    {
+        if (ind >= 0)
+        {
+            Element<T>* tmp = head;
+            size_t count = 0;
+            for (int i = 0; i < ind; i++)
+            while(tmp && count < ind)
+            {
+                tmp = tmp->next;
+            }
+            return tmp;
         }
         else
         {

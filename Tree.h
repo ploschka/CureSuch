@@ -238,7 +238,7 @@ public:
         root->color = 0;
     }
 
-    void insert(T1 key, T2 value)
+    void insert(const T1& key, const T2& value)
     {
         if(root != null)
         {
@@ -264,45 +264,49 @@ public:
             root->color = 0;
         }
     }
-    void remove(T1 key, T2 value)
+    void remove(const T1& key, const T2& value)
     {
         Node<T1, T2>* z = traverse(root, key);
-        Node<T1, T2>* y = z;
-        Node<T1, T2>* x;
-        int nodeCol = y->color;
-        if(z->left == null)
+        z->getValue()->remove(value);
+        if(z->isNull())
         {
-            x = y->right;
-            transplant(z, z->right);
-        }
-        else if(z->right == null)
-        {
-            x = z->left;
-            transplant(z, z->left);
-        }
-        else
-        {
-            y = minimum(z->right);
-            nodeCol = y->color;
-            x = y->right;
-            if(y->parent == z)
+            Node<T1, T2>* y = z;
+            Node<T1, T2>* x;
+            int nodeCol = y->color;
+            if(z->left == null)
             {
-                x->parent = y;
+                x = y->right;
+                transplant(z, z->right);
+            }
+            else if(z->right == null)
+            {
+                x = z->left;
+                transplant(z, z->left);
             }
             else
             {
-                transplant(y, y->right);
-                y->right = z->right;
-                y->right->parent = y;
+                y = minimum(z->right);
+                nodeCol = y->color;
+                x = y->right;
+                if(y->parent == z)
+                {
+                    x->parent = y;
+                }
+                else
+                {
+                    transplant(y, y->right);
+                    y->right = z->right;
+                    y->right->parent = y;
+                }
+                transplant(z, y);
+                y->left = z->left;
+                y->left->parent = y;
+                y->color = z->color;
             }
-            transplant(z, y);
-            y->left = z->left;
-            y->left->parent = y;
-            y->color = z->color;
-        }
-        if(nodeCol == 0)
-        {
-            removeFixup(x);
+            if(nodeCol == 0)
+            {
+                removeFixup(x);
+            }
         }
     }
     void print(std::ostream& os)
@@ -316,20 +320,13 @@ public:
             os << "\t\tДерево пусто" << std::endl;
         }
     }
-    bool find(T1 key, T2 value)
+    List<T2>* find(const T1& key)
     {
         Node<T1, T2>* node = traverse(root, key);
-        List<T2>* list = node->getValue();
-        size_t len = list->length();
-
-        for(size_t i = 0; i < len; i++)
-        {
-            if((*(list))[i] == value)
-            {
-                return true;
-            }
-        }
-        return false;
+        if(node->key == key)
+            return node->getValue();
+        else
+            return nullptr;
     }
 	
     void erase()

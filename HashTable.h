@@ -3,6 +3,8 @@
 #include <cstring>
 #include <utility>
 
+using std::is_pointer_v;
+
 template<typename T1, typename T2>
 class HashTable
 {
@@ -114,10 +116,14 @@ public:
         {
             filled++;
             size_t hash = getHash(key);
-            if(!(table[hash].first == key))
+            if(!(table[hash].first == key) || !status[hash])
             {
                 table[hash] = std::make_pair(key, value);
                 status[hash] = true;
+            }
+            else
+            {
+                throw std::runtime_error("Value with this key is already in table");
             }
         }
         else
@@ -170,7 +176,28 @@ std::ostream& operator<<(std::ostream& os, const HashTable<T1, T2>& tb)
         os << i << ' ';
         if(tb.status[i])
         {
-            os << tb.table[i].first << ": " << tb.table[i].second;
+            bool p1 = is_pointer_v<T1>;
+            bool p2 = is_pointer_v<T2>;
+//            if(p1)
+//                os << *(tb.table[i].first);
+//            else
+//                os << tb.table[i].first;
+//            os << ": ";
+//            if(p2)
+//                os << *(tb.table[i].second);
+//            else
+//                os << tb.table[i].second;
+#ifdef TYPE1POINTER
+            os << *(tb.table[i].first);
+#else
+            os << tb.table[i].first;
+#endif
+            os << ": ";
+#ifdef TYPE2POINTER
+            os << *(tb.table[i].second);
+#else
+            os << tb.table[i].second;
+#endif
         }
         os << '\n';
     }
