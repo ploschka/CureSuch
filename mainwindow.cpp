@@ -26,8 +26,8 @@ size_t num_to_num(const std::string& s)
 }
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -39,18 +39,24 @@ MainWindow::MainWindow(QWidget *parent)
     dis = new Tree<std::string, Note*>;
     theme = new Tree<std::string, Note*>;
     tnum = new Tree<std::string, Note*>;
+
+    parser = new CSVParser;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+
     delete name;
     delete hnum;
     delete price;
     delete address;
+
     delete dis;
     delete theme;
     delete tnum;
+
+    delete parser;
 }
 
 void MainWindow::purge(QTreeWidgetItem* item, Note* victim)
@@ -72,116 +78,69 @@ void MainWindow::purge(QTreeWidgetItem* item, Person* victim)
     this->address->remove(victim->getAddress(), victim);
 }
 
-void MainWindow::on_AddNote_clicked()
+void MainWindow::add(Note* note)
 {
-    AddNote add(this);
-    add.setModal(true);
-    if(add.exec() == QDialog::Accepted)
+    bool catched = false;
+    try
     {
-        bool catched = false;
-        Note* note = add.getNewNote();
-        try
-        {
-            hnum->find(note->getNumber());
-        }
-        catch(std::runtime_error error)
-        {
-            catched = true;
-            QString str("Невозможно создать конспект для несуществующего продавца");
-            QMessageBox::critical(this, "Ошибка создания конспекта", str);
-        }
+        hnum->find(note->getNumber());
+    }
+    catch(std::runtime_error error)
+    {
+        catched = true;
+        QString str("Невозможно создать конспект для несуществующего продавца");
+        QMessageBox::critical(this, "Ошибка создания конспекта", str);
+    }
 
-        if(catched)
-        {
-            delete note;
-        }
-        else
-        {
-            dis->insert(note->getDiscipline(), note);
-            theme->insert(note->getTheme(), note);
-            tnum->insert(note->getNumber(), note);
+    if(catched)
+    {
+        delete note;
+    }
+    else
+    {
+        dis->insert(note->getDiscipline(), note);
+        theme->insert(note->getTheme(), note);
+        tnum->insert(note->getNumber(), note);
 
-            QStringList list;
-            list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme())
-                 << QString::fromStdString(note->getNumber());
-            auto item = new QTreeWidgetItem(list);
-            notes[item] = note;
-            ui->NotesList->addTopLevelItem(item);
-        }
+        QStringList list;
+        list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme())
+             << QString::fromStdString(note->getNumber());
+        auto item = new QTreeWidgetItem(list);
+        notes[item] = note;
+        ui->NotesList->addTopLevelItem(item);
     }
 }
 
-
-void MainWindow::on_DeleteNote_clicked()
+void MainWindow::add(Person* seller)
 {
-    auto curr =(ui->NotesList->currentItem());
-    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление конспекта", "Вы уверены, что хотите удалить конспект: " +
-                                                              curr->text(0) + ' ' + curr->text(1) + ' ' + curr->text(2) + '?',
-                                                              QMessageBox::Yes | QMessageBox::No);
-    if (reply == QMessageBox::Yes)
+    bool catched = false;
+    try
     {
-        Note* victim = notes[curr];
-        purge(curr, victim);
-        auto list = tnum->find(victim->getNumber());
-        if(!list)
-        {
-            QString per = QString::fromStdString(per_to_string(*(hnum->find(victim->getNumber()).second)));
-            QMessageBox::StandardButton reply2 =
-                    QMessageBox::question(this, "Удаление связей", "Также будет удалена запись продавца:\n" +
-                                          per + "\nПродолжить?",
-                                          QMessageBox::Yes | QMessageBox::No);
-            if(reply2 == QMessageBox::Yes)
-            {
-                auto link = ui->SellerList->findItems(QString::fromStdString(victim->getNumber()), Qt::MatchExactly, 1)[0];
-                Person* linkvictim = persons[link];
-                purge(link, linkvictim);
-                delete link;
-                delete linkvictim;
-            }
-        }
-        delete curr;
-        delete victim;
+        hnum->write(seller->getNumber(), seller);
+    }
+    catch(std::runtime_error error)
+    {
+        catched = true;
+        QString str("Продавец с таким номером телефона уже в таблице");
+        QMessageBox::critical(this, "Ошибка создания продавца", str);
+    }
+    if(!catched)
+    {
+        name->insert(seller->getName(), seller);
+        price->insert(seller->getPrice(), seller);
+        address->insert(seller->getAddress(), seller);
+
+        QStringList list;
+        list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
+             << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
+        auto item = new QTreeWidgetItem(list);
+        persons[item] = seller;
+        ui->SellerList->addTopLevelItem(item);
     }
 }
 
-
-void MainWindow::on_AddSeller_clicked()
+void MainWindow::delSellerBtn(QTreeWidgetItem* curr)
 {
-    AddSeller add(this);
-    add.setModal(true);
-    if(add.exec() == QDialog::Accepted)
-    {
-        bool catched = false;
-        Person* seller = add.getNewSeller();
-        try
-        {
-            hnum->write(seller->getNumber(), seller);
-        }
-        catch(std::runtime_error error)
-        {
-            catched = true;
-            QString str("Продавец с таким номером телефона уже в таблице");
-            QMessageBox::critical(this, "Ошибка создания продавца", str);
-        }
-        if(!catched)
-        {
-            name->insert(seller->getName(), seller);
-            price->insert(seller->getPrice(), seller);
-            address->insert(seller->getAddress(), seller);
-
-            QStringList list;
-            list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
-                 << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
-            auto item = new QTreeWidgetItem(list);
-            persons[item] = seller;
-            ui->SellerList->addTopLevelItem(item);
-        }
-    }
-}
-
-void MainWindow::on_DeleteSeller_clicked()
-{
-    auto curr =(ui->SellerList->currentItem());
     QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление продавца", "Вы уверены, что хотите удалить продавца: " +
                                                               curr->text(0) + ' ' + curr->text(1) + ' ' + curr->text(2) + '?',
                                                               QMessageBox::Yes | QMessageBox::No);
@@ -222,6 +181,73 @@ void MainWindow::on_DeleteSeller_clicked()
     }
 }
 
+void MainWindow::delNoteBtn(QTreeWidgetItem* curr)
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление конспекта", "Вы уверены, что хотите удалить конспект: " +
+                                                              curr->text(0) + ' ' + curr->text(1) + ' ' + curr->text(2) + '?',
+                                                              QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        Note* victim = notes[curr];
+        purge(curr, victim);
+        auto list = tnum->find(victim->getNumber());
+        if(!list)
+        {
+            QString per = QString::fromStdString(per_to_string(*(hnum->find(victim->getNumber()).second)));
+            QMessageBox::StandardButton reply2 =
+                    QMessageBox::question(this, "Удаление связей", "Также будет удалена запись продавца:\n" +
+                                          per + "\nПродолжить?",
+                                          QMessageBox::Yes | QMessageBox::No);
+            if(reply2 == QMessageBox::Yes)
+            {
+                auto link = ui->SellerList->findItems(QString::fromStdString(victim->getNumber()), Qt::MatchExactly, 1)[0];
+                Person* linkvictim = persons[link];
+                purge(link, linkvictim);
+                delete link;
+                delete linkvictim;
+            }
+        }
+        delete curr;
+        delete victim;
+    }
+}
+
+void MainWindow::on_AddNote_clicked()
+{
+    AddNote add(this);
+    add.setModal(true);
+    if(add.exec() == QDialog::Accepted)
+    {
+        Note* note = add.getNewNote();
+        this->add(note);
+    }
+}
+
+
+void MainWindow::on_DeleteNote_clicked()
+{
+    auto curr =(ui->NotesList->currentItem());
+    delNoteBtn(curr);
+}
+
+
+void MainWindow::on_AddSeller_clicked()
+{
+    AddSeller add(this);
+    add.setModal(true);
+    if(add.exec() == QDialog::Accepted)
+    {
+        Person* seller = add.getNewSeller();
+        this->add(seller);
+    }
+}
+
+void MainWindow::on_DeleteSeller_clicked()
+{
+    auto curr =(ui->SellerList->currentItem());
+    delSellerBtn(curr);
+}
+
 void MainWindow::on_ReportButton_clicked()
 {
     Report rep(this);
@@ -232,6 +258,7 @@ void MainWindow::on_ReportButton_clicked()
 void MainWindow::on_NoteImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с конспектами", "", "*.txt").toStdString();
+    parsed_strings strs = parser->parse(path);
 }
 
 void MainWindow::on_NoteExport_clicked()
@@ -242,6 +269,7 @@ void MainWindow::on_NoteExport_clicked()
 void MainWindow::on_SellerImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с продавцами", "", "*.txt").toStdString();
+    parsed_strings strs = parser->parse(path);
 }
 
 void MainWindow::on_SellerExport_clicked()

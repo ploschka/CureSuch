@@ -28,6 +28,7 @@ add_library(debugwindow STATIC debugwindow.cpp debugwindow.h debugwindow.ui)
 add_library(search STATIC search.h search.cpp search.ui)
 add_library(person STATIC Person.cpp Person.h)
 add_library(note STATIC Note.cpp Note.h)
+add_library(parser STATIC Parser.cpp Parser.h)
 
 target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(report PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
@@ -49,7 +50,8 @@ else()
             )
 endif()
 
-target_link_libraries(CureSuch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets mainwindow report addseller addnote debugwindow search person note datastructures)
+target_link_libraries(CureSuch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets mainwindow report addseller addnote debugwindow
+    search person note datastructures parser)
 
 set_target_properties(CureSuch PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -10,6 +10,7 @@
 #include <QTreeWidgetItem>
 #include <utility>
 #include <map>
+#include "Parser.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,8 +33,10 @@ public:
     Tree<std::string, Note*>* theme;
     Tree<std::string, Note*>* tnum;
 
-    void purge(QTreeWidgetItem* item, Note* victim);
-    void purge(QTreeWidgetItem* item, Person* victim);
+    void delSellerBtn(QTreeWidgetItem* curr);
+    void delNoteBtn(QTreeWidgetItem* curr);
+
+
 
 private slots:
     void on_AddNote_clicked();
@@ -68,5 +71,12 @@ private:
     Ui::MainWindow *ui;
     std::map<QTreeWidgetItem*, Person*> persons;
     std::map<QTreeWidgetItem*, Note*> notes;
+
+    IParser* parser;
+
+    void purge(QTreeWidgetItem* item, Note* victim);
+    void purge(QTreeWidgetItem* item, Person* victim);
+    void add(Note* newNote);
+    void add(Person* newPerson);
 };
 #endif // MAINWINDOW_H
