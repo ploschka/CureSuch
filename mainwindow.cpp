@@ -11,11 +11,10 @@
 #include "search.h"
 #include "debugwindow.h"
 
-template<typename T>
-size_t num_to_num(const std::pair<std::string, T*>& p)
+size_t num_to_num(const std::string& s)
 {
     size_t result = 0;
-    std::string combined = p.first;
+    std::string combined = s;
     size_t j = 1;
     for(auto i: combined)
     {
@@ -32,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     name = new Tree<std::string, Person*>;
-    hnum = new HashTable<per_by_number>(1000, num_to_num);
+    hnum = new HashTable<std::string, Person*>(1000, num_to_num);
     price = new Tree<size_t, Person*>;
     address = new Tree<std::string, Person*>;
 
@@ -95,7 +94,7 @@ void MainWindow::on_AddSeller_clicked()
     {
         Person* seller = add.getNewSeller();
         name->insert(seller->getName(), seller);
-        hnum->write(std::make_pair(seller->getNumber(), seller));
+        hnum->write(seller->getNumber(), seller);
         price->insert(seller->getPrice(), seller);
         address->insert(seller->getAddress(), seller);
 

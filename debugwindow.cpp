@@ -65,7 +65,14 @@ void DebugWindow::on_NameTree_clicked()
 
 void DebugWindow::on_NumberTable_clicked()
 {
-
+    std::stringstream ss;
+    ss << *(par->hnum);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 
 

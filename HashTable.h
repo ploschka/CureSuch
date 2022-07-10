@@ -1,19 +1,21 @@
 #pragma once
 #include <iostream>
 #include <cstring>
+#include <utility>
 
-template<typename T>
+template<typename T1, typename T2>
 class HashTable
 {
+typedef std::pair<T1, T2> elem;
 private:
-    T* table;
+    elem* table;
     bool* status;
     size_t tableSize;
     size_t filled;
     size_t rounded;
-    size_t (*valueToNumber)(const T&);
+    size_t (*keyToNumber)(const T1&);
 
-    size_t getHash(const T& key) const
+    size_t getHash(const T1& key) const
     {
         size_t tryn = 0;
         size_t primary = primaryHash(key);
@@ -21,7 +23,7 @@ private:
         auto was = new bool[tableSize];
         memset(was, 0, tableSize);
         size_t count = 0;
-        while(status[hash] && !(table[hash] == key) && count < filled)
+        while(status[hash] && !(table[hash].first == key) && count < filled)
         {
             tryn++;
             hash = secondaryHash(primary, tryn);
@@ -31,7 +33,7 @@ private:
                 count++;
             }
         }
-        if (count == filled && !(table[hash] == key))
+        if (count == filled && !(table[hash].first == key))
         {
             throw std::runtime_error("No such key in table");
         }
@@ -51,9 +53,9 @@ private:
         } while (result >= tableSize);
         return result;
     }
-    size_t primaryHash(const T& key) const
+    size_t primaryHash(const T1& key) const
     {
-        size_t result = valueToNumber(key);
+        size_t result = keyToNumber(key);
         return result % rounded;
     }
 
@@ -71,7 +73,7 @@ private:
             if(!was[next] && status[next])
             {
                 status[next] = false;
-                newHash = getHash(table[next]);
+                newHash = getHash(table[next].first);
                 table[newHash] = table[next];
                 status[newHash] = true;
                 was[newHash] = true;
@@ -82,7 +84,7 @@ private:
     }
 
 public:
-    HashTable(size_t size, size_t (*valueToNumber)(const T&)): tableSize(size), filled(0), valueToNumber(valueToNumber)
+    HashTable(size_t size, size_t (*keyToNumber)(const T1&)): tableSize(size), filled(0), keyToNumber(keyToNumber)
     {
         rounded = [](size_t v)
         {
@@ -96,7 +98,7 @@ public:
             v++;
             return v;
         }(size);
-        table = new T[size];
+        table = new elem[size];
         status = new bool[size];
         memset(status, 0, size);
     }
@@ -106,15 +108,15 @@ public:
         delete[] status;
     }
 
-    void write(const T& key)
+    void write(const T1& key, const T2& value)
     {
         if (filled < tableSize)
         {
             filled++;
             size_t hash = getHash(key);
-            if(!(table[hash] == key))
+            if(!(table[hash].first == key))
             {
-                table[hash] = key;
+                table[hash] = std::make_pair(key, value);
                 status[hash] = true;
             }
         }
@@ -123,20 +125,20 @@ public:
             throw(std::length_error("Hash table already full, nowhere to add"));
         }
     }
-    size_t find(const T& key) const
+    elem& find(const T1& key) const
     {
         size_t hash = getHash(key);
 
         if(!status[hash])
             throw std::runtime_error("No such key in table");
 
-        if(table[hash] == key)
+        if(table[hash].first == key)
         {
-            return hash;
+            return table[hash];
         }
-        return (0-1);
+        throw std::runtime_error("No such key in table");
     }
-    void remove(const T& key)
+    void remove(const T1& key)
     {
         size_t hash = getHash(key);
         if(!status[hash])
@@ -144,7 +146,7 @@ public:
 
         if(filled)
         {
-            if(table[hash] == key)
+            if(table[hash].first == key)
             {
                 status[hash] = false;
                 filled--;
@@ -156,4 +158,21 @@ public:
             throw(std::runtime_error("Hash table is empty, nothing to delete"));
         }
     }
+    template<typename T, typename TT>
+    friend std::ostream& operator<<(std::ostream& os, const HashTable<T, TT>&);
 };
+
+template<typename T1, typename T2>
+std::ostream& operator<<(std::ostream& os, const HashTable<T1, T2>& tb)
+{
+    for(size_t i = 0; i < tb.tableSize; i++)
+    {
+        os << i << ' ';
+        if(tb.status[i])
+        {
+            os << tb.table[i].first << ": " << tb.table[i].second;
+        }
+        os << '\n';
+    }
+    return os;
+}

@@ -10,15 +10,6 @@
 #include <QTreeWidgetItem>
 #include <utility>
 
-typedef std::pair<std::string, Note*> note_by_dis;
-typedef std::pair<std::string, Note*> note_by_theme;
-typedef std::pair<std::string, Note*> note_by_number;
-
-typedef std::pair<std::string, Person*> per_by_name;
-typedef std::pair<std::string, Person*> per_by_number;
-typedef std::pair<size_t, Person*> per_by_price;
-typedef std::pair<std::string, Person*> per_by_address;
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -32,7 +23,7 @@ public:
     ~MainWindow();
 
     Tree<std::string, Person*>* name;
-    HashTable<per_by_number>* hnum;
+    HashTable<std::string, Person*>* hnum;
     Tree<size_t, Person*>* price;
     Tree<std::string, Person*>* address;
 
