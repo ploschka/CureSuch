@@ -30,21 +30,13 @@ std::string Person::getAddress() const
     return address;
 }
 
-size_t per_to_number(const Person& p)
-{
-    size_t result = 0;
-    std::string combined = p.getNumber();
-    size_t j = 1;
-    for(auto i: combined)
-    {
-        result += i * j;
-        j++;
-    }
-    result += p.getPrice() * j;
-    return result;
-}
-
 std::string per_to_string(const Person& p)
 {
     return (p.getName() + ' ' + p.getNumber() + ' ' + std::to_string(p.getPrice()) + ' ' + p.getAddress());
+}
+
+std::ostream& operator<<(std::ostream& os, const Person& p)
+{
+    os << per_to_string(p);
+    return os;
 }

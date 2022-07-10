@@ -9,21 +9,34 @@
 #include <QFileDialog>
 #include <fstream>
 #include "search.h"
+#include "debugwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ht = new HashTable<Person>(50, per_to_number);
-    rb = new Tree<Note>;
+
+    name = new Tree<per_by_name>;
+    hnum = new HashTable<per_by_number>(1000, num_to_num);
+    price = new Tree<per_by_price>;
+    address = new Tree<per_by_address>;
+
+    dis = new Tree<note_by_dis>;
+    theme = new Tree<note_by_theme>;
+    tnum = new Tree<note_by_number>;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete ht;
-    delete rb;
+    delete name;
+    delete hnum;
+    delete price;
+    delete address;
+    delete dis;
+    delete theme;
+    delete tnum;
 }
 
 void MainWindow::on_AddNote_clicked()
@@ -33,7 +46,10 @@ void MainWindow::on_AddNote_clicked()
     if(add.exec() == QDialog::Accepted)
     {
         Note* note = add.getNewNote();
-        rb->insert(*note);
+        dis->insert(std::make_pair(note->getDiscipline(), note));
+        theme->insert(std::make_pair(note->getTheme(), note));
+        tnum->insert(std::make_pair(note->getNumber(), note));
+
         QStringList list;
         list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme()) << QString::fromStdString(note->getNumber());
         ui->NotesList->addTopLevelItem(new QTreeWidgetItem(list));
@@ -64,14 +80,17 @@ void MainWindow::on_AddSeller_clicked()
     if(add.exec() == QDialog::Accepted)
     {
         Person* seller = add.getNewSeller();
-        ht->write(*seller);
+        name->insert(std::make_pair(seller->getName(), seller));
+        hnum->write(std::make_pair(seller->getNumber(), seller));
+        price->insert(std::make_pair(seller->getPrice(), seller));
+        address->insert(std::make_pair(seller->getAddress(), seller));
+
         QStringList list;
         list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
              << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
         ui->SellerList->addTopLevelItem(new QTreeWidgetItem(list));
     }
 }
-
 
 void MainWindow::on_DeleteSeller_clicked()
 {
@@ -85,48 +104,38 @@ void MainWindow::on_DeleteSeller_clicked()
      */
 }
 
-
 void MainWindow::on_ReportButton_clicked()
 {
-    /*
-     * Открывается окно с полями для ввода
-     * После этого выполняется поиск по заданным полям и формируется отчёт
-     * Если в итоге отчёт пустой, то это сразу выводится в отдельном окошечке
-     * Отчёт выводится в отдельном окне
-     */
     Report rep(this);
     rep.setModal(true);
     rep.exec();
 }
-
 
 void MainWindow::on_NoteImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с конспектами", "", "*.txt").toStdString();
 }
 
-
 void MainWindow::on_NoteExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с конспектами", "", "*.txt").toStdString();
 }
-
 
 void MainWindow::on_SellerImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с продавцами", "", "*.txt").toStdString();
 }
 
-
 void MainWindow::on_SellerExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с продавцами", "", "*.txt").toStdString();
 }
 
-
 void MainWindow::on_DebugButton_clicked()
 {
-
+    DebugWindow debug(this);
+    debug.setModal(true);
+    debug.exec();
 }
 
 void MainWindow::on_NoteSearchButton_clicked()

@@ -8,6 +8,16 @@
 #include "Note.h"
 #include <QListWidget>
 #include <QTreeWidgetItem>
+#include <utility>
+
+typedef std::pair<std::string, Note*> note_by_dis;
+typedef std::pair<std::string, Note*> note_by_theme;
+typedef std::pair<std::string, Note*> note_by_number;
+
+typedef std::pair<std::string, Person*> per_by_name;
+typedef std::pair<std::string, Person*> per_by_number;
+typedef std::pair<size_t, Person*> per_by_price;
+typedef std::pair<std::string, Person*> per_by_address;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +30,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    Tree<per_by_name>* name;
+    HashTable<per_by_number>* hnum;
+    Tree<per_by_price>* price;
+    Tree<per_by_address>* address;
+
+    Tree<note_by_dis>* dis;
+    Tree<note_by_theme>* theme;
+    Tree<note_by_number>* tnum;
 
 private slots:
     void on_AddNote_clicked();
@@ -50,7 +69,5 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    HashTable<Person>* ht;
-    Tree<Note>* rb;
 };
 #endif // MAINWINDOW_H

@@ -24,5 +24,5 @@ public:
     std::string getAddress() const;
 };
 
-size_t per_to_number(const Person& p);
 std::string per_to_string(const Person& p);
+std::ostream& operator<<(std::ostream& os, const Person& p);

@@ -13,10 +13,6 @@ bool Note::operator<(const Note& other) const
     {
         return this->theme < other.theme;
     }
-    else if(this->number != other.number)
-    {
-        return this->number < other.number;
-    }
     return false;
 }
 bool Note::operator>(const Note& other) const
@@ -48,4 +44,10 @@ std::string Note::getNumber() const
 std::string note_to_string(const Note& n)
 {
     return (n.getDiscipline() + ' ' + n.getTheme() + ' ' + n.getNumber());
+}
+
+std::ostream& operator<<(std::ostream& os, const Note& n)
+{
+    os << note_to_string(n);
+    return os;
 }

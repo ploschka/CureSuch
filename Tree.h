@@ -1,5 +1,7 @@
 #pragma once
 #include "Node.h"
+#include <iostream>
+#include "god.h"
 
 template<typename T>
 class Tree
@@ -11,7 +13,7 @@ private:
     {
         if ((node->getValue() == value) ||
             ((node->getValue() < value) && (node->right == null)) ||
-            ((node->getValue() > value) && (node->left == null)))
+            ((value < node->getValue()) && (node->left == null)))
         {
             return node;
         }
@@ -22,6 +24,11 @@ private:
         else if (node->getValue() > value)
         {
             return traverse(node->left, value);
+        }
+        else
+        {
+            throw std::runtime_error("WTF?");
+            return nullptr;
         }
     }
     void rRotation(Node<T>* node)
@@ -299,15 +306,15 @@ public:
             removeFixup(x);
         }
     }
-    void print()
+    void print(std::ostream& os)
     {
         if (root != null)
         {
-            root->print(0);
+            root->print(os, 0);
         }
         else
         {
-            std::cout << "\t\t" << "Дерево пусто" << std::endl;
+            os << "\t\tДерево пусто" << std::endl;
         }
     }
     bool find(T value)

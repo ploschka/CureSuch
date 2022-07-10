@@ -22,3 +22,4 @@ public:
 };
 
 std::string note_to_string(const Note& n);
+std::ostream& operator<<(std::ostream& os, const Note& n);

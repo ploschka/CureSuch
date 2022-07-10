@@ -19,22 +19,25 @@ set(PROJECT_SOURCES
         resources.qrc
 )
 
+add_library(datastructures STATIC Tree.h Node.h List.h Element.h HashTable.h)
 add_library(mainwindow STATIC mainwindow.cpp mainwindow.h mainwindow.ui)
 add_library(report STATIC report.h report.cpp report.ui)
 add_library(addseller STATIC addseller.cpp addseller.h addseller.ui)
 add_library(addnote STATIC addnote.cpp addnote.h addnote.ui)
 add_library(debugwindow STATIC debugwindow.cpp debugwindow.h debugwindow.ui)
-add_library(search search.h search.cpp search.ui)
-add_library(person Person.cpp Person.h)
-add_library(note Note.cpp Note.h)
-add_library(datastructures Tree.h Node.h List.h Element.h HashTable.h)
+add_library(search STATIC search.h search.cpp search.ui)
+add_library(person STATIC Person.cpp Person.h)
+add_library(note STATIC Note.cpp Note.h)
+add_library(god STATIC god.h)
 
-target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(datastructures PRIVATE god)
+target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets god)
 target_link_libraries(report PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(addseller PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(addnote PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets god)
 target_link_libraries(search PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

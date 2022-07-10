@@ -53,7 +53,7 @@ public:
         }
         return count;
     }
-    void print()
+    void print(std::ostream& os)
     {
         if (!(isEmpty()))
         {
@@ -61,14 +61,14 @@ public:
             int len = length();
             for(int i = 1; i <= len; i++)
             {
-                std::cout << tmp->getValue() << " ";
+                os << tmp->getValue() << " --> ";
                 tmp = tmp->next;
             }
-            std::cout << std::endl;
+            os << std::endl;
         }
         else
         {
-            std::cout << "List is empty\n";
+            os << "List is empty\n";
         }
     }
     void add(T value)

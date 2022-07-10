@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cstring>
+#include "god.h"
 
 template<typename T>
 class HashTable
@@ -21,7 +22,7 @@ private:
         auto was = new bool[tableSize];
         memset(was, 0, tableSize);
         size_t count = 0;
-        while(status[hash] && (table[hash] != key) && count < filled)
+        while(status[hash] && !(table[hash] == key) && count < filled)
         {
             tryn++;
             hash = secondaryHash(primary, tryn);
@@ -31,7 +32,7 @@ private:
                 count++;
             }
         }
-        if (count == filled && table[hash] != key)
+        if (count == filled && !(table[hash] == key))
         {
             throw std::runtime_error("No such key in table");
         }
@@ -112,7 +113,7 @@ public:
         {
             filled++;
             size_t hash = getHash(key);
-            if(table[hash] != key)
+            if(!(table[hash] == key))
             {
                 table[hash] = key;
                 status[hash] = true;

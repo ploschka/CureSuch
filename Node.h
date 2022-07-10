@@ -1,5 +1,6 @@
 #pragma once
 #include "List.h"
+#include <iostream>
 
 template<typename T>
 class Tree;
@@ -8,24 +9,25 @@ template<typename T>
 class Node
 {
 private:
-    void print(int level)
+    void print(std::ostream& os, int level)
     {
-        std::string str;
         if(!(this->right->isNull()))
         {
-            this->right->print(level + 1);
+            this->right->print(os, level + 1);
         }
 
         for(int i = 0; i < level; i++)
         {
-            std::cout << "\t";
+            os << "\t";
         }
 
-        std::cout << ((color == 0)? ("\033[100m"): ("\033[41m")) << getValue() << " " << list.length() << "\033[0m" << std::endl;
+        os << ((color == 0)? ("B: "): ("R: "));
+        list.print(os);
+        os << std::endl;
 
         if(!(this->left->isNull()))
         {
-            this->left->print(level + 1);
+            this->left->print(os, level + 1);
         }
     }
     int erase()
@@ -128,6 +130,8 @@ public:
     {
         if (!(this -> isNull()))
             return list[1];
+        else
+            throw std::runtime_error("Null node");
     }
     bool isNull()
     {
