@@ -31,14 +31,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    Tree<per_by_name>* name;
+    Tree<std::string, Person*>* name;
     HashTable<per_by_number>* hnum;
-    Tree<per_by_price>* price;
-    Tree<per_by_address>* address;
+    Tree<size_t, Person*>* price;
+    Tree<std::string, Person*>* address;
 
-    Tree<note_by_dis>* dis;
-    Tree<note_by_theme>* theme;
-    Tree<note_by_number>* tnum;
+    Tree<std::string, Note*>* dis;
+    Tree<std::string, Note*>* theme;
+    Tree<std::string, Note*>* tnum;
 
 private slots:
     void on_AddNote_clicked();

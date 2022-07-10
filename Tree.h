@@ -1,29 +1,28 @@
 #pragma once
 #include "Node.h"
 #include <iostream>
-#include "god.h"
 
-template<typename T>
+template<typename T1, typename T2>
 class Tree
 {
 private:
-    Node<T>* root;
-    Node<T>* null;
-    Node<T>* traverse(Node<T>* node, const T& value)
+    Node<T1, T2>* root;
+    Node<T1, T2>* null;
+    Node<T1, T2>* traverse(Node<T1, T2>* node, const T1& key)
     {
-        if ((node->getValue() == value) ||
-            ((node->getValue() < value) && (node->right == null)) ||
-            ((value < node->getValue()) && (node->left == null)))
+        if ((node->getKey() == key) ||
+            ((node->getKey() < key) && (node->right == null)) ||
+            ((key < node->getKey()) && (node->left == null)))
         {
             return node;
         }
-        else if (node->getValue() < value)
+        else if (node->getKey() < key)
         {
-            return traverse(node->right, value);
+            return traverse(node->right, key);
         }
-        else if (node->getValue() > value)
+        else if (node->getKey() > key)
         {
-            return traverse(node->left, value);
+            return traverse(node->left, key);
         }
         else
         {
@@ -31,9 +30,9 @@ private:
             return nullptr;
         }
     }
-    void rRotation(Node<T>* node)
+    void rRotation(Node<T1, T2>* node)
     {
-        Node<T>* other = node->left;
+        Node<T1, T2>* other = node->left;
         node->left = other->right;
         if (!(other->right->isNull()))
         {
@@ -55,9 +54,9 @@ private:
         other->right = node;
         node->parent = other;
     }
-    void lRotation(Node<T>* node)
+    void lRotation(Node<T1, T2>* node)
     {
-        Node<T>* other = node->right;
+        Node<T1, T2>* other = node->right;
         node->right = other->left;
         if (!(other->left->isNull()))
         {
@@ -79,13 +78,13 @@ private:
         other->left = node;
         node->parent = other;
     }
-    void insertFixup(Node<T>* node)
+    void insertFixup(Node<T1, T2>* node)
     {
         while(node->parent->color == 1)
         {
             if((node->parent == node->parent->parent->left) && (node->parent->parent != null))
             {
-                Node<T>* uncle = node->parent->parent->right;
+                Node<T1, T2>* uncle = node->parent->parent->right;
                 if(uncle->color == 1)
                 {
                     node->parent->color = 0;
@@ -107,7 +106,7 @@ private:
             }
             else if((node->parent == node->parent->parent->right) && (node->parent->parent != null))
             {
-                Node<T>* uncle = node->parent->parent->left;
+                Node<T1, T2>* uncle = node->parent->parent->left;
                 if(uncle->color == 1)
                 {
                     node->parent->color = 0;
@@ -130,13 +129,13 @@ private:
         }
         root->color = 0;
     }
-    void removeFixup(Node<T>* x)
+    void removeFixup(Node<T1, T2>* x)
     {
         while ((x != root) && (x->color == 0))
         {
             if (x == x->parent->left)
             {
-                Node<T>* w = x->parent->right;
+                Node<T1, T2>* w = x->parent->right;
                 if (w->color == 1)
                 {
                     w->color = 0;
@@ -167,7 +166,7 @@ private:
             }
             else
             {
-                Node<T>* w = x->parent->left;
+                Node<T1, T2>* w = x->parent->left;
                 if (w->color == 1)
                 {
                     w->color = 0;
@@ -199,7 +198,7 @@ private:
         }
         x->color = 0;
     }
-    void transplant(Node<T>* node, Node<T>* other)
+    void transplant(Node<T1, T2>* node, Node<T1, T2>* other)
     {
         if(node->parent == null)
         {
@@ -215,7 +214,7 @@ private:
         }
         other->parent = node->parent;
     }
-    Node<T>* minimum(Node<T>* node)
+    Node<T1, T2>* minimum(Node<T1, T2>* node)
     {
         if(node->left == null)
         {
@@ -229,47 +228,47 @@ private:
 public:
     Tree()
     {
-        null = new Node<T>();
+        null = new Node<T1, T2>();
         root = null;
     }
-    Tree(T value)
+    Tree(T1 key, T2 value)
     {
-        null = new Node<T>();
-        root = new Node(value, null, null, null);
+        null = new Node<T1, T2>();
+        root = new Node(key, value, null, null, null);
         root->color = 0;
     }
 
-    void insert(T value)
+    void insert(T1 key, T2 value)
     {
         if(root != null)
         {
-            Node<T>* par = traverse(root, value);
-            if(value < par->getValue())
+            Node<T1, T2>* par = traverse(root, key);
+            if(key < par->getKey())
             {
-                par->left = new Node(value, par, null, null);
+                par->left = new Node(key, value, par, null, null);
                 insertFixup(par->left);
             }
-            else if(value > par->getValue())
+            else if(key > par->getKey())
             {
-                par->right = new Node(value, par, null, null);
+                par->right = new Node(key, value, par, null, null);
                 insertFixup(par->right);
             }
             else
             {
-                par->list.add(value);
+                par->list->add(value);
             }
         }
         else
         {
-            root = new Node(value, null, null, null);
+            root = new Node(key, value, null, null, null);
             root->color = 0;
         }
     }
-    void remove(T value)
+    void remove(T1 key, T2 value)
     {
-        Node<T>* z = traverse(root, value);
-        Node<T>* y = z;
-        Node<T>* x;
+        Node<T1, T2>* z = traverse(root, key);
+        Node<T1, T2>* y = z;
+        Node<T1, T2>* x;
         int nodeCol = y->color;
         if(z->left == null)
         {
@@ -317,10 +316,20 @@ public:
             os << "\t\tДерево пусто" << std::endl;
         }
     }
-    bool find(T value)
+    bool find(T1 key, T2 value)
     {
-        Node<T>* node = traverse(root, value);
-        return (value == node->getValue());
+        Node<T1, T2>* node = traverse(root, key);
+        List<T2>* list = node->getValue();
+        size_t len = list->length();
+
+        for(size_t i = 0; i < len; i++)
+        {
+            if((*(list))[i] == value)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 	
     void erase()
@@ -328,26 +337,5 @@ public:
         root->erase();
         delete root;
         root = null;
-    }
-
-    void pryam()
-    {
-        root->pryam();
-        std::cout << std::endl;
-    }
-    void obrat()
-    {
-        root->obrat();
-        std::cout << std::endl;
-    }
-    void symmlp()
-    {
-        root->symmlp();
-        std::cout << std::endl;
-    }
-    void symmpl()
-    {
-        root->symmpl();
-        std::cout << std::endl;
     }
 };

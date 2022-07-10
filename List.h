@@ -120,10 +120,10 @@ public:
     }
     T& operator[](int index)
     {
-        if ((index <= length()) && (index > 0))
+        if ((index < length()) && (index > 0))
         {
             Element<T>* tmp = head;
-            for (int i = 1; i < index; i++)
+            for (int i = 0; i < index; i++)
             {
                 tmp = tmp->next;
             }

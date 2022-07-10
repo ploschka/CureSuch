@@ -26,7 +26,14 @@ DebugWindow::~DebugWindow()
 
 void DebugWindow::on_AddressTree_clicked()
 {
-
+    std::stringstream ss;
+    par->address->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 
 
@@ -45,7 +52,14 @@ void DebugWindow::on_DispTree_clicked()
 
 void DebugWindow::on_NameTree_clicked()
 {
-
+    std::stringstream ss;
+    par->name->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 
 
@@ -57,18 +71,39 @@ void DebugWindow::on_NumberTable_clicked()
 
 void DebugWindow::on_NumberTree_clicked()
 {
-
+    std::stringstream ss;
+    par->tnum->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 
 
 void DebugWindow::on_PriceTree_clicked()
 {
-
+    std::stringstream ss;
+    par->price->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 
 
 void DebugWindow::on_ThemeTree_clicked()
 {
-
+    std::stringstream ss;
+    par->theme->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        ui->Text->appendPlainText(QString::fromStdString(tmp));
+    }
 }
 

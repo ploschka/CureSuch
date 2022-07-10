@@ -2,10 +2,10 @@
 #include "List.h"
 #include <iostream>
 
-template<typename T>
+template<typename T1, typename T2>
 class Tree;
 
-template<typename T>
+template<typename T1, typename T2>
 class Node
 {
 private:
@@ -21,8 +21,8 @@ private:
             os << "\t";
         }
 
-        os << ((color == 0)? ("B: "): ("R: "));
-        list.print(os);
+        os << ((color == 0)? ("B: "): ("R: ")) << key << ": ";
+        list->print(os);
         os << std::endl;
 
         if(!(this->left->isNull()))
@@ -35,108 +35,53 @@ private:
         if(!(this->left->isNull()))
         {
             this->left->erase();
-            Node* tmp = this->left;
+            Node<T1, T2>* tmp = this->left;
             this->left = this->left->left;
             delete tmp;
         }
         if(!(this->right->isNull()))
         {
             this->right->erase();
-            Node* tmp = this->right;
+            Node<T1, T2>* tmp = this->right;
             this->right = this->right->right;
             delete tmp;
         }
         return 0;
     }
 
-    void pryam()
-    {
-        std::cout << getValue() << " ";
-
-        if (!(left->isNull()))
-        {
-            left->pryam();
-        }
-
-        if (!(right->isNull()))
-        {
-            right->pryam();
-        }
-    }
-    void obrat()
-    {
-        if (!(left->isNull()))
-        {
-            left->obrat();
-        }
-
-        if (!(right->isNull()))
-        {
-            right->obrat();
-        }
-
-        std::cout << getValue() << " ";
-    }
-    void symmlp()
-    {
-        if (!(left->isNull()))
-        {
-            left->symmlp();
-        }
-
-        std::cout << getValue() << " ";
-
-        if (!(right->isNull()))
-        {
-            right->symmlp();
-        }
-    }
-    void symmpl()
-    {
-        if (!(right->isNull()))
-        {
-            right->symmpl();
-        }
-
-        std::cout << getValue() << " ";
-
-        if (!(left->isNull()))
-        {
-            left->symmpl();
-        }
-    }
-
-    List<T> list;
-    Node<T>* left;
-    Node<T>* right;
-    Node<T>* parent;
+    T1 key;
+    List<T2>* list;
+    Node<T1, T2>* left;
+    Node<T1, T2>* right;
+    Node<T1, T2>* parent;
 	bool color;
 public:
-    Node<T>(T value, Node<T>* parent, Node<T>* left, Node<T>* right):
-        left(left), right(right), parent(parent), color(1)
+    Node<T1, T2>(T1 key, T2 value, Node<T1, T2>* parent, Node<T1, T2>* left, Node<T1, T2>* right):
+        key(key), left(left), right(right), parent(parent), color(1)
     {
-        list = List(value);
+        list = new List(value);
     }
-    Node<T>():left(this), right(this), parent(nullptr), color(0)
+    Node<T1, T2>():left(this), right(this), parent(nullptr), color(0)
     {
-        list = List<T>();
+        list = new List<T2>();
     }
-    ~Node<T>()
+    ~Node<T1, T2>()
     {
-        list.erase();
-        list.~List();
+        list->erase();
+        delete list;
     }
-    T& getValue()
+    T1& getKey()
     {
-        if (!(this -> isNull()))
-            return list[1];
-        else
-            throw std::runtime_error("Null node");
+        return this->key;
+    }
+    List<T2>* getValue()
+    {
+        return list;
     }
     bool isNull()
     {
-        return (this->list.isEmpty());
+        return (this->list->isEmpty());
     }
 
-    friend class Tree<T>;
+    friend class Tree<T1, T2>;
 };

@@ -28,14 +28,12 @@ add_library(debugwindow STATIC debugwindow.cpp debugwindow.h debugwindow.ui)
 add_library(search STATIC search.h search.cpp search.ui)
 add_library(person STATIC Person.cpp Person.h)
 add_library(note STATIC Note.cpp Note.h)
-add_library(god STATIC god.h)
 
-target_link_libraries(datastructures PRIVATE god)
-target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets god)
+target_link_libraries(mainwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(report PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(addseller PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(addnote PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets god)
+target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(search PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 

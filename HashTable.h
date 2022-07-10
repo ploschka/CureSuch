@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <cstring>
-#include "god.h"
 
 template<typename T>
 class HashTable

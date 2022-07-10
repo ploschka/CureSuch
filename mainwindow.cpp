@@ -11,20 +11,34 @@
 #include "search.h"
 #include "debugwindow.h"
 
+template<typename T>
+size_t num_to_num(const std::pair<std::string, T*>& p)
+{
+    size_t result = 0;
+    std::string combined = p.first;
+    size_t j = 1;
+    for(auto i: combined)
+    {
+        result += i * j;
+        j++;
+    }
+    return result;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    name = new Tree<per_by_name>;
+    name = new Tree<std::string, Person*>;
     hnum = new HashTable<per_by_number>(1000, num_to_num);
-    price = new Tree<per_by_price>;
-    address = new Tree<per_by_address>;
+    price = new Tree<size_t, Person*>;
+    address = new Tree<std::string, Person*>;
 
-    dis = new Tree<note_by_dis>;
-    theme = new Tree<note_by_theme>;
-    tnum = new Tree<note_by_number>;
+    dis = new Tree<std::string, Note*>;
+    theme = new Tree<std::string, Note*>;
+    tnum = new Tree<std::string, Note*>;
 }
 
 MainWindow::~MainWindow()
@@ -46,9 +60,9 @@ void MainWindow::on_AddNote_clicked()
     if(add.exec() == QDialog::Accepted)
     {
         Note* note = add.getNewNote();
-        dis->insert(std::make_pair(note->getDiscipline(), note));
-        theme->insert(std::make_pair(note->getTheme(), note));
-        tnum->insert(std::make_pair(note->getNumber(), note));
+        dis->insert(note->getDiscipline(), note);
+        theme->insert(note->getTheme(), note);
+        tnum->insert(note->getNumber(), note);
 
         QStringList list;
         list << QString::fromStdString(note->getDiscipline()) << QString::fromStdString(note->getTheme()) << QString::fromStdString(note->getNumber());
@@ -80,10 +94,10 @@ void MainWindow::on_AddSeller_clicked()
     if(add.exec() == QDialog::Accepted)
     {
         Person* seller = add.getNewSeller();
-        name->insert(std::make_pair(seller->getName(), seller));
+        name->insert(seller->getName(), seller);
         hnum->write(std::make_pair(seller->getNumber(), seller));
-        price->insert(std::make_pair(seller->getPrice(), seller));
-        address->insert(std::make_pair(seller->getAddress(), seller));
+        price->insert(seller->getPrice(), seller);
+        address->insert(seller->getAddress(), seller);
 
         QStringList list;
         list << QString::fromStdString(seller->getName()) << QString::fromStdString(seller->getNumber())
