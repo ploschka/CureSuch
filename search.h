@@ -18,9 +18,13 @@ public:
 
     void ggg(QTreeWidget* wgg);
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Search *ui;
     QTreeWidget* wg;
+    bool fl = false;
 };
 
 #endif // SEARCH_H

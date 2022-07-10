@@ -1,6 +1,7 @@
 #pragma once
 #include "List.h"
 #include <iostream>
+#include <vector>
 
 template<typename T1, typename T2>
 class Tree;
@@ -47,6 +48,18 @@ private:
             delete tmp;
         }
         return 0;
+    }
+    void giveList(std::vector<List<T2>*>* vec)
+    {
+        vec->push_back(this->getValue());
+        if(!this->left->isNull())
+        {
+            this->left->giveList(vec);
+        }
+        if(!this->right->isNull())
+        {
+            this->right->giveList(vec);
+        }
     }
 
     T1 key;

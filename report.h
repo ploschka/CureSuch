@@ -18,7 +18,7 @@ public:
 private slots:
     void on_SaveButton_clicked();
 
-    void on_OKButton_clicked();
+    void on_ReportButton_clicked();
 
 private:
     Ui::Report *ui;

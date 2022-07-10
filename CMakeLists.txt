@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(CureSuch VERSION 0.1 LANGUAGES CXX)
+project(LectionDB VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -37,23 +37,24 @@ target_link_libraries(addnote PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(debugwindow PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(search PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(CureSuch
+    qt_add_executable(LectionDB
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${app_icon_resource_windows}
     )
 else()
-    add_executable(CureSuch
+    add_executable(LectionDB
             ${PROJECT_SOURCES}
             )
 endif()
 
-target_link_libraries(CureSuch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets mainwindow report addseller addnote debugwindow
+target_link_libraries(LectionDB PRIVATE Qt${QT_VERSION_MAJOR}::Widgets mainwindow report addseller addnote debugwindow
     search person note datastructures parser)
 
-set_target_properties(CureSuch PROPERTIES
+set_target_properties(LectionDB PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -62,5 +63,5 @@ set_target_properties(CureSuch PROPERTIES
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(CureSuch)
+    qt_finalize_executable(LectionDB)
 endif()

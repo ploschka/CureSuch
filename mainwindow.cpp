@@ -103,6 +103,7 @@ bool MainWindow::add(Note* note)
          << QString::fromStdString(note->getNumber());
     auto item = new QTreeWidgetItem(list);
     notes[item] = note;
+    rnotes[note] = item;
     ui->NotesList->addTopLevelItem(item);
     return true;
 }
@@ -129,13 +130,14 @@ bool MainWindow::add(Person* seller)
          << QString::fromStdString(std::to_string(seller->getPrice())) << QString::fromStdString(seller->getAddress());
     auto item = new QTreeWidgetItem(list);
     persons[item] = seller;
+    rpersons[seller] = item;
     ui->SellerList->addTopLevelItem(item);
     return true;
 }
 
 void MainWindow::delSellerBtn(QTreeWidgetItem* curr)
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление продавца", "Вы уверены, что хотите удалить продавца: " +
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление продавца", "Вы уверены, что хотите удалить продавца:\n" +
                                                               curr->text(0) + ' ' + curr->text(1) + ' ' + curr->text(2) + '?',
                                                               QMessageBox::Yes | QMessageBox::No);
     if (reply == QMessageBox::Yes)
@@ -159,13 +161,15 @@ void MainWindow::delSellerBtn(QTreeWidgetItem* curr)
                                           QMessageBox::Yes | QMessageBox::No);
             if(reply2 == QMessageBox::Yes)
             {
-                auto lst = ui->NotesList->findItems(QString::fromStdString(victim->getNumber()), Qt::MatchExactly, 2);
-                for(auto& i: lst)
+                cr = list->index(0);
+                for(size_t i = 0; i < len; i++)
                 {
-                    Note* linkvictim = notes[i];
-                    purge(i, linkvictim);
-                    delete i;
+                    Note* linkvictim = cr->getValue();
+                    auto item = rnotes[linkvictim];
+                    purge(item, linkvictim);
+                    delete item;
                     delete linkvictim;
+                    cr = cr->next;
                 }
             }
         }
@@ -177,7 +181,7 @@ void MainWindow::delSellerBtn(QTreeWidgetItem* curr)
 
 void MainWindow::delNoteBtn(QTreeWidgetItem* curr)
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление конспекта", "Вы уверены, что хотите удалить конспект: " +
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Удаление конспекта", "Вы уверены, что хотите удалить конспект:\n" +
                                                               curr->text(0) + ' ' + curr->text(1) + ' ' + curr->text(2) + '?',
                                                               QMessageBox::Yes | QMessageBox::No);
     if (reply == QMessageBox::Yes)
@@ -194,8 +198,8 @@ void MainWindow::delNoteBtn(QTreeWidgetItem* curr)
                                           QMessageBox::Yes | QMessageBox::No);
             if(reply2 == QMessageBox::Yes)
             {
-                auto link = ui->SellerList->findItems(QString::fromStdString(victim->getNumber()), Qt::MatchExactly, 1)[0];
-                Person* linkvictim = persons[link];
+                Person* linkvictim = hnum->find(victim->getNumber()).second;
+                auto link = rpersons[linkvictim];
                 purge(link, linkvictim);
                 delete link;
                 delete linkvictim;
@@ -252,15 +256,18 @@ void MainWindow::on_ReportButton_clicked()
 void MainWindow::on_NoteImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с конспектами", "", "*.txt").toStdString();
-    parsed_strings strs = parser->parse(path);
-    for(auto& i: strs)
+    if(!path.empty())
     {
-        std::string dis = i[0];
-        std::string theme = i[1];
-        std::string number = i[2];
-        if (!add(new Note(dis, theme, number)))
+        parsed_strings strs = parser->parse(path);
+        for(auto& i: strs)
         {
-            break;
+            std::string dis = i[0];
+            std::string theme = i[1];
+            std::string number = i[2];
+            if (!add(new Note(dis, theme, number)))
+            {
+                break;
+            }
         }
     }
 }
@@ -268,30 +275,36 @@ void MainWindow::on_NoteImport_clicked()
 void MainWindow::on_NoteExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с конспектами", "", "*.txt").toStdString();
-    auto list = ui->NotesList->findItems("", Qt::MatchStartsWith, 0);
-    std::ofstream file(path);
-    for(auto& i: list)
+    if(!path.empty())
     {
-        file << i->text(0).toStdString() << "; " << i->text(1).toStdString()<< "; "
-             << i->text(2).toStdString() << '\n';
+        auto list = ui->NotesList->findItems("", Qt::MatchStartsWith, 0);
+        std::ofstream file(path);
+        for(auto& i: list)
+        {
+            file << i->text(0).toStdString() << "; " << i->text(1).toStdString()<< "; "
+                 << i->text(2).toStdString() << '\n';
+        }
+        file.flush();
+        file.close();
     }
-    file.flush();
-    file.close();
 }
 
 void MainWindow::on_SellerImport_clicked()
 {
     std::string path = QFileDialog::getOpenFileName(this, "Открыть файл с продавцами", "", "*.txt").toStdString();
-    parsed_strings strs = parser->parse(path);
-    for(auto& i: strs)
+    if(!path.empty())
     {
-        std::string name = i[0];
-        std::string number = i[1];
-        size_t price = std::stoul(i[2]);
-        std::string address = i[3];
-        if(!add(new Person(name, number, price, address)))
+        parsed_strings strs = parser->parse(path);
+        for(auto& i: strs)
         {
-            break;
+            std::string name = i[0];
+            std::string number = i[1];
+            size_t price = std::stoul(i[2]);
+            std::string address = i[3];
+            if(!add(new Person(name, number, price, address)))
+            {
+                break;
+            }
         }
     }
 }
@@ -299,15 +312,18 @@ void MainWindow::on_SellerImport_clicked()
 void MainWindow::on_SellerExport_clicked()
 {
     std::string path = QFileDialog::getSaveFileName(this, "Сохранить файл с продавцами", "", "*.txt").toStdString();
-    auto list = ui->SellerList->findItems("", Qt::MatchStartsWith, 0);
-    std::ofstream file(path);
-    for(auto& i: list)
+    if(!path.empty())
     {
-        file << i->text(0).toStdString() << "; " << i->text(1).toStdString() << "; "
-             << i->text(2).toStdString() << "; " << i->text(3).toStdString() << '\n';
+        auto list = ui->SellerList->findItems("", Qt::MatchStartsWith, 0);
+        std::ofstream file(path);
+        for(auto& i: list)
+        {
+            file << i->text(0).toStdString() << "; " << i->text(1).toStdString() << "; "
+                 << i->text(2).toStdString() << "; " << i->text(3).toStdString() << '\n';
+        }
+        file.flush();
+        file.close();
     }
-    file.flush();
-    file.close();
 }
 
 void MainWindow::on_DebugButton_clicked()
@@ -321,7 +337,7 @@ void MainWindow::on_NoteSearchButton_clicked()
 {
     Search search(this, "Поиск конспектов");
     search.ggg(ui->NotesList);
-    search.setModal(true);
+    search.setModal(false);
     search.exec();
 }
 

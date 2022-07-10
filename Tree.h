@@ -1,6 +1,7 @@
 #pragma once
 #include "Node.h"
 #include <iostream>
+#include <vector>
 
 template<typename T1, typename T2>
 class Tree
@@ -327,6 +328,29 @@ public:
             return node->getValue();
         else
             return nullptr;
+    }
+    std::vector<List<T2>*>* lessOrEqualThan(const T1& key)
+    {
+        Node<T1, T2>* node = root;
+        std::vector<List<T2>*>* vec = new std::vector<List<T2>*>;
+        while(!node->isNull())
+        {
+            while(!node->isNull() && node->getKey() > key)
+            {
+                node = node->left;
+            }
+            if(!node->isNull())
+            {
+                while(node->getKey() <= key && !node->isNull())
+                {
+                    if(!node->left->isNull())
+                        node->left->giveList(vec);
+                    vec->push_back(node->getValue());
+                    node = node->right;
+                }
+            }
+        }
+        return vec;
     }
 	
     void erase()

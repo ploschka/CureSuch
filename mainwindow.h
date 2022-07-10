@@ -33,6 +33,12 @@ public:
     Tree<std::string, Note*>* theme;
     Tree<std::string, Note*>* tnum;
 
+    std::map<QTreeWidgetItem*, Person*> persons;
+    std::map<QTreeWidgetItem*, Note*> notes;
+
+    std::map<Person*, QTreeWidgetItem*> rpersons;
+    std::map<Note*, QTreeWidgetItem*> rnotes;
+
     void delSellerBtn(QTreeWidgetItem* curr);
     void delNoteBtn(QTreeWidgetItem* curr);
 
@@ -69,8 +75,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    std::map<QTreeWidgetItem*, Person*> persons;
-    std::map<QTreeWidgetItem*, Note*> notes;
 
     IParser* parser;
 
