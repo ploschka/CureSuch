@@ -26,6 +26,7 @@ DebugWindow::~DebugWindow()
 
 void DebugWindow::on_AddressTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->address->print(ss);
     std::string tmp;
@@ -39,6 +40,7 @@ void DebugWindow::on_AddressTree_clicked()
 
 void DebugWindow::on_DispTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->dis->print(ss);
     std::string tmp;
@@ -52,6 +54,7 @@ void DebugWindow::on_DispTree_clicked()
 
 void DebugWindow::on_NameTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->name->print(ss);
     std::string tmp;
@@ -65,6 +68,7 @@ void DebugWindow::on_NameTree_clicked()
 
 void DebugWindow::on_NumberTable_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     ss << *(par->hnum);
     std::string tmp;
@@ -78,6 +82,7 @@ void DebugWindow::on_NumberTable_clicked()
 
 void DebugWindow::on_NumberTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->tnum->print(ss);
     std::string tmp;
@@ -91,6 +96,7 @@ void DebugWindow::on_NumberTree_clicked()
 
 void DebugWindow::on_PriceTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->price->print(ss);
     std::string tmp;
@@ -104,6 +110,7 @@ void DebugWindow::on_PriceTree_clicked()
 
 void DebugWindow::on_ThemeTree_clicked()
 {
+    ui->Text->clear();
     std::stringstream ss;
     par->theme->print(ss);
     std::string tmp;

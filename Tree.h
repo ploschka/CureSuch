@@ -9,7 +9,7 @@ class Tree
 private:
     Node<T1, T2>* root;
     Node<T1, T2>* null;
-    Node<T1, T2>* traverse(Node<T1, T2>* node, const T1& key)
+    Node<T1, T2>* traverse(Node<T1, T2>* node, const T1& key) const
     {
         if ((node->getKey() == key) ||
             ((node->getKey() < key) && (node->right == null)) ||
@@ -215,7 +215,7 @@ private:
         }
         other->parent = node->parent;
     }
-    Node<T1, T2>* minimum(Node<T1, T2>* node)
+    Node<T1, T2>* minimum(Node<T1, T2>* node) const
     {
         if(node->left == null)
         {
@@ -231,12 +231,6 @@ public:
     {
         null = new Node<T1, T2>();
         root = null;
-    }
-    Tree(T1 key, T2 value)
-    {
-        null = new Node<T1, T2>();
-        root = new Node(key, value, null, null, null);
-        root->color = 0;
     }
 
     void insert(const T1& key, const T2& value)
@@ -310,7 +304,7 @@ public:
             }
         }
     }
-    void print(std::ostream& os)
+    void print(std::ostream& os) const
     {
         if (root != null)
         {
@@ -321,7 +315,7 @@ public:
             os << "\t\tДерево пусто" << std::endl;
         }
     }
-    List<T2>* find(const T1& key)
+    List<T2>* find(const T1& key) const
     {
         Node<T1, T2>* node = traverse(root, key);
         if(node->key == key)
