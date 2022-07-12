@@ -2,23 +2,15 @@
 #include "ui_search.h"
 #include "mainwindow.h"
 
-Search::Search(QWidget *parent, QString title) :
+Search::Search(QWidget *parent, QString title, QTreeWidget* widget) :
     QDialog(parent),
-    ui(new Ui::Search)
+    ui(new Ui::Search),
+    wg(widget)
 {
     ui->setupUi(this);
     this->setWindowTitle(title);
     ui->tree->header()->setSectionsMovable(false);
-}
 
-Search::~Search()
-{
-    delete ui;
-}
-
-void Search::ggg(QTreeWidget* wgg)
-{
-    this->wg = wgg;
     ui->tree->setColumnCount(wg->columnCount());
     ui->tree->setHeaderItem(wg->headerItem()->clone());
 
@@ -37,6 +29,11 @@ void Search::ggg(QTreeWidget* wgg)
         ui->label_3->setText("Макс. цена");
         ui->label_4->setText(wg->headerItem()->text(3));
     }
+}
+
+Search::~Search()
+{
+    delete ui;
 }
 
 template<typename T, bool fl>

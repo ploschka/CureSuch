@@ -28,8 +28,8 @@ private:
         else
         {
             throw std::runtime_error("WTF?");
-            return nullptr;
         }
+        return nullptr;
     }
     void rRotation(Node<T1, T2>* node)
     {

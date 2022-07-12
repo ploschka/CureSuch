@@ -335,16 +335,14 @@ void MainWindow::on_DebugButton_clicked()
 
 void MainWindow::on_NoteSearchButton_clicked()
 {
-    Search search(this, "Поиск конспектов");
-    search.ggg(ui->NotesList);
+    Search search(this, "Поиск конспектов", ui->NotesList);
     search.setModal(false);
     search.exec();
 }
 
 void MainWindow::on_SellerSearchButton_clicked()
 {
-    Search search(this, "Поиск продавцов");
-    search.ggg(ui->SellerList);
+    Search search(this, "Поиск продавцов", ui->SellerList);
     search.setModal(true);
     search.exec();
 }

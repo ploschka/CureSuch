@@ -13,10 +13,8 @@ class Search : public QDialog
     Q_OBJECT
 
 public:
-    explicit Search(QWidget *parent = nullptr, QString title = "");
+    explicit Search(QWidget *parent = nullptr, QString title = "", QTreeWidget* widget = nullptr);
     ~Search();
-
-    void ggg(QTreeWidget* wgg);
 
 private slots:
     void on_pushButton_clicked();
