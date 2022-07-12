@@ -5,6 +5,34 @@
 #include <utility>
 
 template<typename T1, typename T2>
+void showTree(Tree<T1, T2>* tree, QPlainTextEdit* Text)
+{
+    Text->clear();
+    std::stringstream ss;
+    tree->print(ss);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        Text->appendPlainText(QString::fromStdString(tmp));
+    }
+}
+
+template<typename T1, typename T2>
+void showTable(HashTable<T1, T2>* table, QPlainTextEdit* Text)
+{
+    Text->clear();
+    std::stringstream ss;
+    ss << *(table);
+    std::string tmp;
+    while(!ss.eof())
+    {
+        std::getline(ss, tmp, '\n');
+        Text->appendPlainText(QString::fromStdString(tmp));
+    }
+}
+
+template<typename T1, typename T2>
 std::ostream& operator<<(std::ostream& os, std::pair<T1, T2*> p)
 {
     os << p.first << ": " << *(p.second);
@@ -17,6 +45,14 @@ DebugWindow::DebugWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     par = dynamic_cast<MainWindow*>(this->parent());
+
+    connect(ui->AddressTree, SIGNAL(clicked()), this, SLOT(showAddressTree()));
+    connect(ui->DispTree, SIGNAL(clicked()), this, SLOT(showDispTree()));
+    connect(ui->NameTree, SIGNAL(clicked()), this, SLOT(showNameTree()));
+    connect(ui->NumberTree, SIGNAL(clicked()), this, SLOT(showNumberTree()));
+    connect(ui->PriceTree, SIGNAL(clicked()), this, SLOT(showPriceTree()));
+    connect(ui->ThemeTree, SIGNAL(clicked()), this, SLOT(showThemeTree()));
+    connect(ui->NumberTable, SIGNAL(clicked()), this, SLOT(showNumberTable()));
 }
 
 DebugWindow::~DebugWindow()
@@ -24,100 +60,42 @@ DebugWindow::~DebugWindow()
     delete ui;
 }
 
-void DebugWindow::on_AddressTree_clicked()
+void DebugWindow::showAddressTree()
 {
-    ui->Text->clear();
-    std::stringstream ss;
-    par->address->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
+    showTree(par->address, ui->Text);
+}
+
+void DebugWindow::showDispTree()
+{
+    showTree(par->dis, ui->Text);
+}
+
+void DebugWindow::showNameTree()
+{
+    showTree(par->name, ui->Text);
+}
+
+void DebugWindow::showNumberTree()
+{
+    showTree(par->tnum, ui->Text);
+}
+
+void DebugWindow::showPriceTree()
+{
+    showTree(par->price, ui->Text);
+}
+
+void DebugWindow::showThemeTree()
+{
+    showTree(par->theme, ui->Text);
 }
 
 
-void DebugWindow::on_DispTree_clicked()
+void DebugWindow::showNumberTable()
 {
-    ui->Text->clear();
-    std::stringstream ss;
-    par->dis->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
+    showTable(par->hnum, ui->Text);
 }
 
 
-void DebugWindow::on_NameTree_clicked()
-{
-    ui->Text->clear();
-    std::stringstream ss;
-    par->name->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
-}
 
-
-void DebugWindow::on_NumberTable_clicked()
-{
-    ui->Text->clear();
-    std::stringstream ss;
-    ss << *(par->hnum);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
-}
-
-
-void DebugWindow::on_NumberTree_clicked()
-{
-    ui->Text->clear();
-    std::stringstream ss;
-    par->tnum->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
-}
-
-
-void DebugWindow::on_PriceTree_clicked()
-{
-    ui->Text->clear();
-    std::stringstream ss;
-    par->price->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
-}
-
-
-void DebugWindow::on_ThemeTree_clicked()
-{
-    ui->Text->clear();
-    std::stringstream ss;
-    par->theme->print(ss);
-    std::string tmp;
-    while(!ss.eof())
-    {
-        std::getline(ss, tmp, '\n');
-        ui->Text->appendPlainText(QString::fromStdString(tmp));
-    }
-}
 
