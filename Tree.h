@@ -345,8 +345,7 @@ public:
             }
         }
         return vec;
-    }
-	
+    }	
     void erase()
     {
         root->erase();

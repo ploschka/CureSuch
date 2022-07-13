@@ -59,14 +59,24 @@ std::vector<Person*>* srch<Person, true>(MainWindow* par, Ui::Search* ui)
 
         if(l2)
         {
-            res->push_back(par->hnum->find(lt2).second);
+            try
+            {
+                res->push_back(par->hnum->find(lt2).second);
+            }
+            catch(...){}
         }
         else if(l1)
             list = par->name->find(lt1);
         else if(l4)
             list = par->address->find(lt4);
         else
-            pervec = par->price->lessOrEqualThan(std::stoul(lt3));
+        {
+            try
+            {
+                pervec = par->price->lessOrEqualThan(std::stoul(lt3));
+            }
+            catch(...){}
+        }
 
         if(pervec)
             for(auto& i: *(pervec))
@@ -78,7 +88,7 @@ std::vector<Person*>* srch<Person, true>(MainWindow* par, Ui::Search* ui)
                     el = el->next;
                 }
             }
-        else
+        else if((l1 || l2) && list)
         {
             auto el = list->index(0);
             while(el)
@@ -87,7 +97,7 @@ std::vector<Person*>* srch<Person, true>(MainWindow* par, Ui::Search* ui)
                 el = el->next;
             }
         }
-        if(l1)
+        if(l1 && list)
             for(auto iter = res->begin(); iter != res->end();)
                 {
                 if((**iter).getName() != lt1)
@@ -103,7 +113,7 @@ std::vector<Person*>* srch<Person, true>(MainWindow* par, Ui::Search* ui)
                 else
                     iter++;
                 }
-        if(l4)
+        if(l4 && list)
             for(auto iter = res->begin(); iter != res->end();)
                 {
                 if((**iter).getAddress() != lt4)
@@ -111,9 +121,8 @@ std::vector<Person*>* srch<Person, true>(MainWindow* par, Ui::Search* ui)
                 else
                     iter++;
                 }
-        return res;
     }
-    return nullptr;
+    return res;
 }
 
 template<>
@@ -137,41 +146,42 @@ std::vector<Note*>* srch<Note, false>(MainWindow* par, Ui::Search* ui)
             list = par->dis->find(lt1);
         else
             list = par->theme->find(lt2);
-
-        auto el = list->index(0);
-        while(el)
+        if(list)
         {
-            res->push_back(el->getValue());
-            el = el->next;
-        }
+            auto el = list->index(0);
+            while(el)
+            {
+                res->push_back(el->getValue());
+                el = el->next;
+            }
 
-        if(l1)
-            for(auto iter = res->begin(); iter != res->end();)
-            {
-                if((**iter).getDiscipline() != lt1)
-                    iter = res->erase(iter);
-                else
-                    iter++;
-            }
-        if(l2)
-            for(auto iter = res->begin(); iter != res->end();)
-            {
-                if((**iter).getTheme() != lt2)
-                    iter = res->erase(iter);
-                else
-                    iter++;
-            }
-        if(l3)
-            for(auto iter = res->begin(); iter != res->end();)
-            {
-                if((**iter).getNumber() != lt3)
-                    iter = res->erase(iter);
-                else
-                    iter++;
-            }
-        return res;
+            if(l1)
+                for(auto iter = res->begin(); iter != res->end();)
+                {
+                    if((**iter).getDiscipline() != lt1)
+                        iter = res->erase(iter);
+                    else
+                        iter++;
+                }
+            if(l2)
+                for(auto iter = res->begin(); iter != res->end();)
+                {
+                    if((**iter).getTheme() != lt2)
+                        iter = res->erase(iter);
+                    else
+                        iter++;
+                }
+            if(l3)
+                for(auto iter = res->begin(); iter != res->end();)
+                {
+                    if((**iter).getNumber() != lt3)
+                        iter = res->erase(iter);
+                    else
+                        iter++;
+                }
+        }
     }
-    return nullptr;
+    return res;
 }
 
 void Search::on_pushButton_clicked()

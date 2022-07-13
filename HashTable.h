@@ -176,17 +176,6 @@ std::ostream& operator<<(std::ostream& os, const HashTable<T1, T2>& tb)
         os << i << ' ';
         if(tb.status[i])
         {
-            bool p1 = is_pointer_v<T1>;
-            bool p2 = is_pointer_v<T2>;
-//            if(p1)
-//                os << *(tb.table[i].first);
-//            else
-//                os << tb.table[i].first;
-//            os << ": ";
-//            if(p2)
-//                os << *(tb.table[i].second);
-//            else
-//                os << tb.table[i].second;
 #ifdef TYPE1POINTER
             os << *(tb.table[i].first);
 #else
