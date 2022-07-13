@@ -37,10 +37,6 @@ public:
             }
             delete tmp;
         }
-        else
-        {
-            std::cout << "List is empty\n";
-        }
     }
     int length()
     {
@@ -73,7 +69,7 @@ public:
         }
         else
         {
-            os << "List is empty\n";
+            os << "Список пуст\n";
         }
     }
     void add(T value)
@@ -120,7 +116,7 @@ public:
         }
         else
         {
-            std::cout << "������ ����\n";
+            throw std::runtime_error("Список уже пуст\n");
         }
     }
     void remove(const T& value)

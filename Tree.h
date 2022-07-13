@@ -323,7 +323,7 @@ public:
         else
             return nullptr;
     }
-    std::vector<List<T2>*>* lessOrEqualThan(const T1& key)
+    std::vector<List<T2>*>* lessOrEqualThan(const T1& key) const
     {
         Node<T1, T2>* node = root;
         std::vector<List<T2>*>* vec = new std::vector<List<T2>*>;
