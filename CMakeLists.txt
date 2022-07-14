@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LectionDB VERSION 1.2 LANGUAGES CXX)
+project(LectionDB VERSION 1.2.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

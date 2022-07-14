@@ -72,7 +72,7 @@ public:
         key(key), left(left), right(right), parent(parent), color(1)
     {
         list = new List<T2>();
-        list->add(value);
+        list->addEnd(value);
     }
     Node<T1, T2>():left(this), right(this), parent(nullptr), color(0)
     {

@@ -67,63 +67,16 @@ public:
             os << "Список пуст\n";
         }
     }
-    void add(const T& value)
+    void addEnd(const T& value)
     {
-        if (!(isEmpty()))
+        auto newby = new Element<T>(value, tail, nullptr);
+        if(tail)
         {
-            if (value < head->getValue())
-            {
-                Element<T>* newby = new Element<T>(value, nullptr, head);
-                head->prev = newby;
-                head = newby;
-            }
-            else if (value >= tail->getValue())
-            {
-                Element<T>* newby = new Element<T>(value, tail);
-                tail->next = newby;
-                tail = newby;
-            }
-            else
-            {
-                Element<T>* tmp = head;
-                while (value > tmp->getValue())
-                {
-                    tmp = tmp->next;
-                }
-                Element<T>* newby = new Element<T>(value, tmp->prev, tmp);
-                tmp->prev = newby;
-                newby->prev->next = newby;
-            }
+            tail->next = newby;
         }
-        else
-        {
-            head = new Element<T>(value);
-            tail = head;
-        }
-    }
-    void addBegin(const T& value)
-    {
-        auto newBy = new Element<T>(value, nullptr, head);
-        if(head)
-        {
-            head->prev = newBy;
-        }
-        head = newBy;
-        if(!tail)
-            tail = newBy;
-    }
-    void delEnd()
-    {
-        if (!(isEmpty()))
-        {
-            tail = tail->prev;
-            delete tail->next;
-            tail->next = nullptr;
-        }
-        else
-        {
-            throw std::runtime_error("Список уже пуст\n");
-        }
+        tail = newby;
+        if(!head)
+            head = newby;
     }
     void remove(const T& value)
     {

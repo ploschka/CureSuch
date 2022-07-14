@@ -207,23 +207,6 @@ void MainWindow::delNoteBtn(QTreeWidgetItem* curr)
     {
         Note* victim = notes[curr];
         purge(curr, victim);
-//        auto list = tnum->find(victim->getNumber());
-//        if(!list)
-//        {
-//            QString per = QString::fromStdString(per_to_string(*(hnum->find(victim->getNumber()).second)));
-//            QMessageBox::StandardButton reply2 =
-//                    QMessageBox::question(this, "Удаление связей", "Также будет удалена запись продавца:\n" +
-//                                          per + "\nПродолжить?",
-//                                          QMessageBox::Yes | QMessageBox::No);
-//            if(reply2 == QMessageBox::Yes)
-//            {
-//                Person* linkvictim = hnum->find(victim->getNumber()).second;
-//                auto link = rpersons[linkvictim];
-//                purge(link, linkvictim);
-//                delete link;
-//                delete linkvictim;
-//            }
-//        }
         delete curr;
         delete victim;
     }
