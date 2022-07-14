@@ -250,7 +250,7 @@ public:
             }
             else
             {
-                par->list->add(value);
+                par->list->addBegin(value);
             }
         }
         else

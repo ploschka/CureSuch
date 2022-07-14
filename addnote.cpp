@@ -20,9 +20,12 @@ Note* AddNote::getNewNote()
 
 void AddNote::on_AddButton_clicked()
 {
-    // Добавить проверку
-    newNote = new Note(ui->Discipline->text().toStdString(), ui->ThemeLine->text().toStdString(), ui->NumberLine->text().toStdString());
-    this->accept();
+    if(!ui->Discipline->text().isEmpty() && !ui->ThemeLine->text().isEmpty()
+            && !ui->NumberLine->text().isEmpty())
+    {
+        newNote = new Note(ui->Discipline->text().toStdString(), ui->ThemeLine->text().toStdString(), ui->NumberLine->text().toStdString());
+        this->accept();
+    }
 }
 
 

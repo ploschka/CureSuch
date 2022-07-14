@@ -9,17 +9,12 @@ private:
     Element<T>* head;
     Element<T>* tail;
 public:
-    List(T value)
-    {
-        head = new Element(value);
-        tail = head;
-    }
     List()
     {
         head = nullptr;
         tail = nullptr;
     }
-    bool isEmpty()
+    bool isEmpty() const
     {
         return ((head == nullptr) && (tail == nullptr));
     }
@@ -38,7 +33,7 @@ public:
             delete tmp;
         }
     }
-    int length()
+    int length() const
     {
         int count = 0;
         Element<T>* tmp = head;
@@ -49,7 +44,7 @@ public:
         }
         return count;
     }
-    void print(std::ostream& os)
+    void print(std::ostream& os) const
     {
         if (!(isEmpty()))
         {
@@ -72,7 +67,7 @@ public:
             os << "Список пуст\n";
         }
     }
-    void add(T value)
+    void add(const T& value)
     {
         if (!(isEmpty()))
         {
@@ -105,6 +100,17 @@ public:
             head = new Element<T>(value);
             tail = head;
         }
+    }
+    void addBegin(const T& value)
+    {
+        auto newBy = new Element<T>(value, nullptr, head);
+        if(head)
+        {
+            head->prev = newBy;
+        }
+        head = newBy;
+        if(!tail)
+            tail = newBy;
     }
     void delEnd()
     {
@@ -162,7 +168,7 @@ public:
             exit(-1);
         }
     }
-    Element<T>* index(size_t ind)
+    Element<T>* index(size_t ind) const
     {
         if (ind >= 0)
         {

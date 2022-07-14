@@ -38,27 +38,30 @@ void Report::on_SaveButton_clicked()
 void Report::on_ReportButton_clicked()
 {
     ui->reportList->clear();
-    MainWindow* par = dynamic_cast<MainWindow*>(this->parent());
     if(!ui->DiscipLine->text().isEmpty() && !ui->ThemeLine->text().isEmpty() && !ui->BuildingLine->text().isEmpty())
     {
-        auto list = par->dis->find(ui->DiscipLine->text().toStdString());
-        if(list)
+        MainWindow* par = dynamic_cast<MainWindow*>(this->parent());
+        if(!ui->DiscipLine->text().isEmpty() && !ui->ThemeLine->text().isEmpty() && !ui->BuildingLine->text().isEmpty())
         {
-            auto cr = list->index(0);
-            while(cr)
+            auto list = par->dis->find(ui->DiscipLine->text().toStdString());
+            if(list)
             {
-                if(cr->getValue()->getTheme() == ui->ThemeLine->text().toStdString())
+                auto cr = list->index(0);
+                while(cr)
                 {
-                    Person* per = par->hnum->find(cr->getValue()->getNumber()).second;
-                    if(per->getAddress() == ui->BuildingLine->text().toStdString())
+                    if(cr->getValue()->getTheme() == ui->ThemeLine->text().toStdString())
                     {
-                        QStringList str;
-                        str << QString::fromStdString(std::to_string(per->getPrice())) << QString::fromStdString(per->getName())
-                            << QString::fromStdString(per->getNumber());
-                        ui->reportList->addTopLevelItem(new QTreeWidgetItem(str));
+                        Person* per = par->hnum->find(cr->getValue()->getNumber()).second;
+                        if(per->getAddress() == ui->BuildingLine->text().toStdString())
+                        {
+                            QStringList str;
+                            str << QString::fromStdString(std::to_string(per->getPrice())) << QString::fromStdString(per->getName())
+                                << QString::fromStdString(per->getNumber());
+                            ui->reportList->addTopLevelItem(new QTreeWidgetItem(str));
+                        }
                     }
+                    cr = cr->next;
                 }
-                cr = cr->next;
             }
         }
     }

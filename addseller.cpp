@@ -20,9 +20,13 @@ Person* AddSeller::getNewSeller()
 
 void AddSeller::on_AddButton_clicked()
 {
-    newSeller = new Person(ui->NameLine->text().toStdString(), ui->NumberLine->text().toStdString(),
-                           ui->PriceLine->text().toULong(), ui->BuildingLine->text().toStdString());
-    this->accept();
+    if(!ui->NameLine->text().isEmpty() && !ui->NumberLine->text().isEmpty()
+            && !ui->PriceLine->text().isEmpty() && !ui->BuildingLine->text().isEmpty())
+    {
+        newSeller = new Person(ui->NameLine->text().toStdString(), ui->NumberLine->text().toStdString(),
+                               ui->PriceLine->text().toULong(), ui->BuildingLine->text().toStdString());
+        this->accept();
+    }
 }
 
 

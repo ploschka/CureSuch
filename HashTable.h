@@ -3,8 +3,6 @@
 #include <cstring>
 #include <utility>
 
-using std::is_pointer_v;
-
 template<typename T1, typename T2>
 class HashTable
 {
@@ -14,7 +12,6 @@ private:
     bool* status;
     size_t tableSize;
     size_t filled;
-    size_t rounded;
     size_t (*keyToNumber)(const T1&);
 
     size_t getHash(const T1& key) const
@@ -41,24 +38,20 @@ private:
         }
         return hash;
     }
-    size_t secondaryHash(double hash, const uint16_t tryn) const
+    size_t secondaryHash(double hash, const size_t tryn) const
     {
         double i = tryn;
         size_t preresult;
         size_t result;
-
-        do
-        {
-            preresult = static_cast<size_t>(hash + (0.5 * (i + (i * i))));
-            result = preresult % rounded;
-            i++;
-        } while (result >= tableSize);
+        preresult = static_cast<size_t>(hash + (0.5 * (i + (i * i))));
+        result = preresult % tableSize;
+        i++;
         return result;
     }
     size_t primaryHash(const T1& key) const
     {
         size_t result = keyToNumber(key);
-        return result % rounded;
+        return result % tableSize;
     }
 
     void rebase(size_t currentHash)
@@ -86,9 +79,9 @@ private:
     }
 
 public:
-    HashTable(size_t size, size_t (*keyToNumber)(const T1&)): tableSize(size), filled(0), keyToNumber(keyToNumber)
+    HashTable(size_t size, size_t (*keyToNumber)(const T1&)): filled(0), keyToNumber(keyToNumber)
     {
-        rounded = [](size_t v)
+        tableSize = [](size_t v)
         {
             v--;
             v |= v >> 1;
@@ -100,9 +93,9 @@ public:
             v++;
             return v;
         }(size);
-        table = new elem[size];
-        status = new bool[size];
-        memset(status, 0, size);
+        table = new elem[tableSize];
+        status = new bool[tableSize];
+        memset(status, 0, tableSize);
     }
     ~HashTable()
     {
@@ -187,6 +180,7 @@ std::ostream& operator<<(std::ostream& os, const HashTable<T1, T2>& tb)
 #else
             os << tb.table[i].second;
 #endif
+            os << ":: " << tb.primaryHash(tb.table[i].first);
         }
         os << '\n';
     }

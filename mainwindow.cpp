@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->SellerList->header()->setSectionsMovable(false);
 
     name = new Tree<std::string, Person*>;
-    hnum = new HashTable<std::string, Person*>(1000, num_to_num);
+    hnum = new HashTable<std::string, Person*>(16, num_to_num);
     price = new Tree<size_t, Person*>;
     address = new Tree<std::string, Person*>;
 
@@ -93,6 +93,27 @@ bool MainWindow::add(Note* note)
         QMessageBox::critical(this, "Ошибка создания конспекта", str);
         delete note;
         return false;
+    }
+    auto numList = tnum->find(note->getNumber());
+    bool hasCopy = false;
+    if(numList)
+    {
+        auto el = numList->index(0);
+        while(el && !hasCopy)
+        {
+            if(el->getValue()->getDiscipline() == note->getDiscipline())
+            {
+                hasCopy = true;
+            }
+            el = el->next;
+        }
+        if(hasCopy)
+        {
+            QString str("Невозможно добавить копию конспекта");
+            QMessageBox::critical(this, "Ошибка создания конспекта", str);
+            delete note;
+            return false;
+        }
     }
     dis->insert(note->getDiscipline(), note);
     theme->insert(note->getTheme(), note);
@@ -188,23 +209,23 @@ void MainWindow::delNoteBtn(QTreeWidgetItem* curr)
     {
         Note* victim = notes[curr];
         purge(curr, victim);
-        auto list = tnum->find(victim->getNumber());
-        if(!list)
-        {
-            QString per = QString::fromStdString(per_to_string(*(hnum->find(victim->getNumber()).second)));
-            QMessageBox::StandardButton reply2 =
-                    QMessageBox::question(this, "Удаление связей", "Также будет удалена запись продавца:\n" +
-                                          per + "\nПродолжить?",
-                                          QMessageBox::Yes | QMessageBox::No);
-            if(reply2 == QMessageBox::Yes)
-            {
-                Person* linkvictim = hnum->find(victim->getNumber()).second;
-                auto link = rpersons[linkvictim];
-                purge(link, linkvictim);
-                delete link;
-                delete linkvictim;
-            }
-        }
+//        auto list = tnum->find(victim->getNumber());
+//        if(!list)
+//        {
+//            QString per = QString::fromStdString(per_to_string(*(hnum->find(victim->getNumber()).second)));
+//            QMessageBox::StandardButton reply2 =
+//                    QMessageBox::question(this, "Удаление связей", "Также будет удалена запись продавца:\n" +
+//                                          per + "\nПродолжить?",
+//                                          QMessageBox::Yes | QMessageBox::No);
+//            if(reply2 == QMessageBox::Yes)
+//            {
+//                Person* linkvictim = hnum->find(victim->getNumber()).second;
+//                auto link = rpersons[linkvictim];
+//                purge(link, linkvictim);
+//                delete link;
+//                delete linkvictim;
+//            }
+//        }
         delete curr;
         delete victim;
     }

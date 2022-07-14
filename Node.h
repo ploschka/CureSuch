@@ -10,7 +10,7 @@ template<typename T1, typename T2>
 class Node
 {
 private:
-    void print(std::ostream& os, int level)
+    void print(std::ostream& os, int level) const
     {
         if(!(this->right->isNull()))
         {
@@ -22,7 +22,7 @@ private:
             os << "\t";
         }
 
-        os << ((color == 0)? ("B: "): ("R: ")) << key << ": ";
+        os << ((!color)? ("B: "): ("R: ")) << key << ": ";
         list->print(os);
         os << std::endl;
 
@@ -31,7 +31,7 @@ private:
             this->left->print(os, level + 1);
         }
     }
-    int erase()
+    void erase()
     {
         if(!(this->left->isNull()))
         {
@@ -47,9 +47,8 @@ private:
             this->right = this->right->right;
             delete tmp;
         }
-        return 0;
     }
-    void giveList(std::vector<List<T2>*>* vec)
+    void giveList(std::vector<List<T2>*>* vec) const
     {
         vec->push_back(this->getValue());
         if(!this->left->isNull())
@@ -72,7 +71,8 @@ public:
     Node<T1, T2>(T1 key, T2 value, Node<T1, T2>* parent, Node<T1, T2>* left, Node<T1, T2>* right):
         key(key), left(left), right(right), parent(parent), color(1)
     {
-        list = new List(value);
+        list = new List<T2>();
+        list->add(value);
     }
     Node<T1, T2>():left(this), right(this), parent(nullptr), color(0)
     {
@@ -83,15 +83,15 @@ public:
         list->erase();
         delete list;
     }
-    T1& getKey()
+    const T1& getKey() const
     {
         return this->key;
     }
-    List<T2>* getValue()
+    List<T2>* getValue() const
     {
         return list;
     }
-    bool isNull()
+    bool isNull() const
     {
         return (this->list->isEmpty());
     }
