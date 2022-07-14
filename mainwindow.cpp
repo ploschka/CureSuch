@@ -16,11 +16,9 @@ size_t num_to_num(const std::string& s)
 {
     size_t result = 0;
     std::string combined = s;
-    size_t j = 1;
     for(auto i: combined)
     {
-        result += i * j;
-        j++;
+        result += i;
     }
     return result;
 }
