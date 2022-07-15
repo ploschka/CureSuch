@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->SellerList->header()->setSectionsMovable(false);
 
     name = new Tree<std::string, Person*>;
-    hnum = new HashTable<std::string, Person*>(1000, num_to_num);
+    hnum = new HashTable<std::string, Person*>(16, num_to_num);
     price = new Tree<size_t, Person*>;
     address = new Tree<std::string, Person*>;
 

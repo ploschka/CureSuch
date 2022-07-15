@@ -58,10 +58,11 @@ private:
         auto* was = new bool[tableSize];
         memset(was, 0, tableSize);
         was[currentHash] = true;
+        size_t i = 1;
         size_t next;
         size_t newHash;
-        size_t rehashed = 0;
-        for (size_t i = 1; rehashed < filled; i++)
+        size_t rehashed = 0;        
+        while(rehashed < filled/* && status[next]*/)
         {
             next = secondaryHash(currentHash, i);
             if(!was[next] && status[next])
@@ -73,8 +74,12 @@ private:
                 was[newHash] = true;
                 was[next] = true;
                 rehashed++;
+                currentHash = next;
+                i = 0;
             }
+            i++;
         }
+        delete[] was;
     }
 
 public:
