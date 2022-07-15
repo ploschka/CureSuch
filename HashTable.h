@@ -45,7 +45,6 @@ private:
         size_t result;
         preresult = static_cast<size_t>(hash + (0.5 * (i + (i * i))));
         result = preresult % tableSize;
-        i++;
         return result;
     }
     size_t primaryHash(const T1& key) const
@@ -128,12 +127,12 @@ public:
     {
         size_t hash = getHash(key);
 
-        if(!status[hash])
-            throw std::runtime_error("No such key in table");
-
-        if(table[hash].first == key)
+        if(status[hash])
         {
-            return table[hash];
+            if(table[hash].first == key)
+            {
+                return table[hash];
+            }
         }
         throw std::runtime_error("No such key in table");
     }
